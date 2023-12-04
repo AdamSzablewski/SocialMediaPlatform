@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.internal.build.AllowPrintStacktrace;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,5 +25,6 @@ public class Post {
     private String multimediaId;
     private int likes = 0;
     private String description;
+    private LocalDateTime dateTime;
     private List<Comment> comments = new ArrayList<>();
 }

@@ -22,5 +22,6 @@ public class Feed {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
-    private List<Post> feed = new LinkedList<>();
+
+    private LinkedList<Post> feed = new LinkedList<>();
 }
