@@ -1,30 +1,30 @@
 package com.adamszablewski.classes;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.internal.build.AllowPrintStacktrace;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Post {
+public class Post extends Likeable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String text;
     private String multimediaId;
-    private int likes = 0;
+    @OneToMany
+    private Set<Like> likes;
     private String description;
     private LocalDateTime dateTime;
-    private List<Comment> comments = new ArrayList<>();
+    @OneToMany
+    private List<Comment> comments;
 }

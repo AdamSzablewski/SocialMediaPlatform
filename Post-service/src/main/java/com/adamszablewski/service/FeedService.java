@@ -25,41 +25,42 @@ public class FeedService {
                 .orElse(
                         Feed.builder()
                         .userId(userId)
-                        .feed(new LinkedList<>())
+                        .posts(new LinkedList<>())
                         .build()
                 );
 
         updateFeed(feed);
-        return feed.getFeed();
+        return feed.getPosts();
 
     }
 
     /**
      * Updates the users feed by adding new posts from users sorted from the newest to the oldest.
-     * Removes post from feed if exceeds maximum of:
+     * Removes post from feed if exceeds maximum of: {@value MAX_FEED_SIZE}
      * @param feed
      *
      */
     private void updateFeed(Feed feed){
         List<Long> friends = friendServiceClient.getFriendsForUser(feed.getUserId());
         PriorityQueue<Post> newPosts = new PriorityQueue<>(Comparator.comparing(Post::getDateTime));
+
         friends.forEach(friend -> {
             List<Post> posts = postRepository.getAllByUserId(friend);
-
             posts.forEach(post -> {
-                if (!feed.getFeed().contains(post)){
+                if (!feed.getPosts().contains(post)){
                     newPosts.add(post);
                 }
             });
 
+
         });
         while (!newPosts.isEmpty()){
             Post post = newPosts.poll();
-            if(feed.getFeed().size() < MAX_FEED_SIZE){
-                feed.getFeed().addFirst(post);
+            if(feed.getPosts().size() < MAX_FEED_SIZE){
+                feed.getPosts().add(0, post);
             }else {
-                feed.getFeed().removeLast();
-                feed.getFeed().addFirst(post);
+                feed.getPosts().remove(feed.getPosts().size()-1);
+                feed.getPosts().add(0, post);
             }
         }
         feedRepository.save(feed);
