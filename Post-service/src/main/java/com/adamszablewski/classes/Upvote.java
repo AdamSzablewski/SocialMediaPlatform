@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class Like {
+public class Upvote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
     @OneToOne
-    private Likeable likeableObject;
+    private Post post;
+    @OneToOne
+    private Comment comment;
 }

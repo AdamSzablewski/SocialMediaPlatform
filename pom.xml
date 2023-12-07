@@ -8,6 +8,7 @@
 		<module>Friend-service</module>
 		<module>Post-service</module>
         <module>Api-Gateway</module>
+        <module>Messeging-Service</module>
     </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

@@ -15,14 +15,15 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Builder
-public class Post extends Likeable {
+public class Post implements Commentable, Likeable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private long userId;
     private String text;
     private String multimediaId;
     @OneToMany
-    private Set<Like> likes;
+    private Set<Upvote> likes;
     private String description;
     private LocalDateTime dateTime;
     @OneToMany

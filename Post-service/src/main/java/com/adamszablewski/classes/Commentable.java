@@ -1,5 +1,7 @@
 package com.adamszablewski.classes;
 
+import java.util.List;
+
 public interface Commentable {
-    void comment();
+    List<Comment> getComments();
 }

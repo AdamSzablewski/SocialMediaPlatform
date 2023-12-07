@@ -1,10 +1,7 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
-import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.CommentService;
-import com.adamszablewski.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,17 @@ public class CommentController {
     @GetMapping("/answers")
     public ResponseEntity<List<Comment>> getCommentsForComment(@RequestParam(name = "commentId") long commentId){
         return new ResponseEntity<>(commentService.getCommentsForComment(commentId), HttpStatus.OK);
+    }
+    @DeleteMapping()
+    public ResponseEntity<String> deleteCommentsForPost(@RequestParam(name = "postId") long postId,
+                                                      @RequestParam(name = "commentId") long commentId){
+        commentService.deleteCommentForPost(postId, commentId);
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteComment(@RequestParam(name = "commentId") long commentId){
+        commentService.deleteComment(commentId);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }

@@ -12,18 +12,21 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Comment extends Likeable {
+public class Comment implements Commentable, Likeable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String comment;
     private long userId;
-    @OneToMany
-    private Set<Like> likes;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Upvote> likes;
     @OneToMany
     private List<Comment> answers;
-    @OneToOne
-    private Comment parentComment;
 
 
+
+    @Override
+    public List<Comment> getComments() {
+        return answers;
+    }
 }
