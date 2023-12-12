@@ -13,7 +13,6 @@ import java.util.Set;
 public interface FriendRequestRepository extends JpaRepository<FriendRequest, Long> {
 
 
-    Optional<FriendRequest> findByUserId(long userId);
-    Optional<FriendRequest> findBySenderAndReceiver(long sender, long receiver);
+
 
 }

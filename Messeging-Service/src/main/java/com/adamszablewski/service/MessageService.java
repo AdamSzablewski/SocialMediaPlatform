@@ -1,5 +1,6 @@
 package com.adamszablewski.service;
 
+import com.adamszablewski.dto.FriendRequest;
 import com.adamszablewski.dto.MessageDto;
 import com.adamszablewski.dto.RestResponseDTO;
 import com.adamszablewski.exceptions.NoSuchConversationFoundException;
@@ -163,5 +164,16 @@ public class MessageService {
 
         messageRepository.deleteAllByInstanceId(instanceId);
 
+    }
+
+    public void addFriendRequestMessage(FriendRequest friendRequest) {
+        String friendRequestMessageText = "You have a friend request from "+friendRequest.getSenderUsername();
+        MessageDto messageDto = MessageDto.builder()
+                .message(friendRequestMessageText)
+                .sender(friendRequest.getSenderId())
+                .recipient(friendRequest.getReceiverId())
+                .dateSent(friendRequest.getDateTime())
+                .build();
+        addMessageToConversationFromMessageQueue(messageDto);
     }
 }

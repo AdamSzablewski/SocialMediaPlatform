@@ -16,7 +16,7 @@ public class GatewayConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
         return builder.routes()
                 .route("user-service", r -> r
-                        .path("/appointments/**")
+                        .path("/user/**")
                         .or()
                         .path("/facilities/**")
                         .or()
@@ -39,7 +39,9 @@ public class GatewayConfig {
                         .or()
                         .path("/messages/**")
                         .uri("lb://MESSAGING"))
-
+                .route("friend-service", r -> r
+                        .path("/friends/**")
+                        .uri("lb://FRIEND-SERVICE"))
                 .route("eureka-status", r -> r
                         .path("/eureka/**")
                         .uri("http://localhost:8761"))

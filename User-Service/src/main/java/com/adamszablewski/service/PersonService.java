@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 @RequestMapping("/users")
@@ -55,4 +57,13 @@ public class PersonService {
                 .build();
         personRepository.save(newPerson);
     }
+
+    public String getUsernameFromId(long userId) {
+        Person user = personRepository.findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        System.out.println("username "+user.getUsername());
+        return user.getUsername();
+    }
+
+
 }

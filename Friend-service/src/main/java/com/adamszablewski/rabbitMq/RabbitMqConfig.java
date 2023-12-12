@@ -31,6 +31,14 @@ public class RabbitMqConfig {
         return new Queue(MESSAGE_MEASSAGE_QUEUE);
     }
     @Bean
+    public Binding bindFriendRequestQueue(@Qualifier("friendRequestQueue") Queue friendRequestQueue,
+                                          @Qualifier("exchange") TopicExchange messageExchange) {
+        return BindingBuilder.bind(friendRequestQueue)
+                .to(messageExchange)
+                .with("frq");
+    }
+
+    @Bean
     public TopicExchange exchange(){
         return new TopicExchange(EXCHANGE_NAME);
     }
@@ -40,12 +48,12 @@ public class RabbitMqConfig {
 //                .to(exchange())
 //                .with("test1");
 //    }
-    @Bean
-    public Binding bindFriendRequestQueue(@Qualifier("friendRequestQueue") Queue friendRequestQueue, TopicExchange messageExchange) {
-        return BindingBuilder.bind(friendRequestQueue)
-                .to(messageExchange)
-                .with("frq");
-    }
+//    @Bean
+//    public Binding bindFriendRequestQueue(@Qualifier("friendRequestQueue") Queue friendRequestQueue, TopicExchange messageExchange) {
+//        return BindingBuilder.bind(friendRequestQueue)
+//                .to(messageExchange)
+//                .with("frq");
+//    }
 //    @Bean
 //    public Binding bindingSalesOrderQueue(@Qualifier("appointmentQueue") Queue appointmentQueue, TopicExchange messageExchange) {
 //        return BindingBuilder.bind(appointmentQueue)

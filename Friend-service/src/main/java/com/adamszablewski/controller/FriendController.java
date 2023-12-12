@@ -1,6 +1,8 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.classes.Friend;
+import com.adamszablewski.dtos.FriendDto;
+import com.adamszablewski.dtos.FriendListDto;
 import com.adamszablewski.service.FriendService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import java.util.Set;
 public class FriendController {
     private final FriendService friendService;
     @GetMapping()
-    public ResponseEntity<Set<Friend>> getFriendsForUser(@RequestParam(name = "userId") long userId){
+    public ResponseEntity<FriendListDto> getFriendsForUser(@RequestParam(name = "userId") long userId){
         return ResponseEntity.ok(friendService.getFriendsForUser(userId));
     }
     @GetMapping("/add")

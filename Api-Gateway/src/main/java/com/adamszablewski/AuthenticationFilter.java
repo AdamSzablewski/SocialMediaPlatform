@@ -23,42 +23,42 @@ public class AuthenticationFilter {
 
     private final JwtUtil jwtUtil;
 
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public GlobalFilter customGlobalFilter(AuthenticationFilter authenticationFilter) {
-        return (exchange, chain) -> {
-            final ServerHttpRequest originalRequest = exchange.getRequest();
-            final ServerHttpRequest modifiedRequest; // Declare it here
-
-            if (isRegisterDtoRequest(originalRequest) || isLoginRequest(originalRequest)) {
-                return chain.filter(exchange);
-            }
-            if (!originalRequest.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                throw new RuntimeException("No token");
-            }
-
-            String tokenCandidate = originalRequest.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            if (tokenCandidate != null && tokenCandidate.startsWith("Bearer ")) {
-                tokenCandidate = tokenCandidate.substring(7);
-            }
-            final String token = tokenCandidate;
-
-            modifiedRequest = originalRequest.mutate()
-                    .header("userEmail", jwtUtil.getUsernameFromJWT(token))
-                    .build();
-
-            return jwtUtil.validateToken(token)
-                    .flatMap(isValidated -> {
-                        if (!isValidated) {
-                            return Mono.error(new RuntimeException("Not Authorized"));
-                        }
-                        return chain.filter(exchange.mutate().request(modifiedRequest).build());
-                    })
-                    .onErrorResume(error -> {
-                        return chain.filter(exchange);
-                    });
-        };
-    }
+//    @Bean
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    public GlobalFilter customGlobalFilter(AuthenticationFilter authenticationFilter) {
+//        return (exchange, chain) -> {
+//            final ServerHttpRequest originalRequest = exchange.getRequest();
+//            final ServerHttpRequest modifiedRequest; // Declare it here
+//
+//            if (isRegisterDtoRequest(originalRequest) || isLoginRequest(originalRequest)) {
+//                return chain.filter(exchange);
+//            }
+//            if (!originalRequest.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+//                throw new RuntimeException("No token");
+//            }
+//
+//            String tokenCandidate = originalRequest.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+//            if (tokenCandidate != null && tokenCandidate.startsWith("Bearer ")) {
+//                tokenCandidate = tokenCandidate.substring(7);
+//            }
+//            final String token = tokenCandidate;
+//
+//            modifiedRequest = originalRequest.mutate()
+//                    .header("userEmail", jwtUtil.getUsernameFromJWT(token))
+//                    .build();
+//
+//            return jwtUtil.validateToken(token)
+//                    .flatMap(isValidated -> {
+//                        if (!isValidated) {
+//                            return Mono.error(new RuntimeException("Not Authorized"));
+//                        }
+//                        return chain.filter(exchange.mutate().request(modifiedRequest).build());
+//                    })
+//                    .onErrorResume(error -> {
+//                        return chain.filter(exchange);
+//                    });
+//        };
+//    }
 
 
     private boolean isLoginRequest(ServerHttpRequest request) {

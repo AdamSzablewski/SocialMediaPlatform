@@ -1,4 +1,4 @@
-package com.adamszablewski.util.rabbitMqConsumer;
+package com.adamszablewski.rabbitMqConsumer;
 
 public class RabitMqVariables {
 
