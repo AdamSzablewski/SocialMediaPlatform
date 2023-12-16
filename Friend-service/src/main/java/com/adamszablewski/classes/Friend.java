@@ -1,5 +1,7 @@
 package com.adamszablewski.classes;
 
+import com.adamszablewski.interfaces.Identifiable;
+import com.adamszablewski.interfaces.UserResource;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-public class Friend {
+public class Friend implements Identifiable, UserResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

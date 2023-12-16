@@ -7,6 +7,7 @@ import com.adamszablewski.classes.FriendList;
 import com.adamszablewski.dtos.FriendDto;
 import com.adamszablewski.dtos.FriendListDto;
 import com.adamszablewski.interfaces.Identifiable;
+import com.adamszablewski.interfaces.UserResource;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class Mapper {
-    public static  <T extends Identifiable> Set<Long> convertObjectListToIdSet(Collection<T> collection){
+    public <T extends Identifiable> Set<Long> convertObjectListToIdSet(Collection<T> collection){
         return collection.stream()
                 .map(Identifiable::getId)
                 .collect(Collectors.toSet());
     }
-    public static <T extends Identifiable> Long convertObjectToId(T entity){
+    public <T extends Identifiable> Long convertObjectToId(T entity){
         return entity.getId();
     }
 
@@ -34,12 +35,25 @@ public class Mapper {
     public FriendDto mapFriendToDto(Friend friend){
         return FriendDto.builder()
                 .friendListId(friend.getFriendList().getId())
-                .username(friend.getUsername())
+                .userId(friend.getUserId())
                 .build();
     }
+    //todo add map useridendifiable mapper
+
     public Set<FriendDto> mapFriendToDto(Set<Friend> friends){
         Set<FriendDto> friendDtos = new HashSet<>();
         friends.forEach(friend -> friendDtos.add(mapFriendToDto(friend)));
         return friendDtos;
+    }
+
+    public <T extends  UserResource> Set<Long> convertObjectToUserId(Set<T> userResource) {
+        Set<Long> userIds = new HashSet<>();
+        userResource.forEach(resource -> {
+            userIds.add(convertObjectToUserId(resource));
+        });
+        return userIds;
+    }
+    public <T extends  UserResource> Long convertObjectToUserId(T userResource) {
+        return userResource.getUserId();
     }
 }

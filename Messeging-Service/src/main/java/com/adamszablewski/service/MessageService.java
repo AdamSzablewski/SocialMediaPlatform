@@ -167,7 +167,7 @@ public class MessageService {
     }
 
     public void addFriendRequestMessage(FriendRequest friendRequest) {
-        String friendRequestMessageText = "You have a friend request from "+friendRequest.getSenderUsername();
+        String friendRequestMessageText = "You have a friend request from "+friendRequest.getSenderId();
         MessageDto messageDto = MessageDto.builder()
                 .message(friendRequestMessageText)
                 .sender(friendRequest.getSenderId())

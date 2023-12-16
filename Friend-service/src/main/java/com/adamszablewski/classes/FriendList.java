@@ -17,4 +17,13 @@ public class FriendList {
     private long id;
     @OneToMany
     private Set<Friend> friends;
+    @Override
+    public String toString() {
+        Set<Long> friendIds = new HashSet<>();
+        friends.forEach(friend -> friendIds.add(friend.getUserId()));
+
+        return "FriendList{" +
+                "friends=" + friendIds +
+                '}';
+    }
 }

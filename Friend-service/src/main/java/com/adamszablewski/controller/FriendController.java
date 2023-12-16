@@ -1,14 +1,13 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.classes.Friend;
-import com.adamszablewski.dtos.FriendDto;
+import com.adamszablewski.classes.FriendRequest;
 import com.adamszablewski.dtos.FriendListDto;
 import com.adamszablewski.service.FriendService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,6 +22,14 @@ public class FriendController {
     @GetMapping()
     public ResponseEntity<FriendListDto> getFriendsForUser(@RequestParam(name = "userId") long userId){
         return ResponseEntity.ok(friendService.getFriendsForUser(userId));
+    }
+    @GetMapping("/requests")
+    public ResponseEntity<List<FriendRequest>> getFriendRequestsForUser(@RequestParam(name = "userId") long userId){
+        return ResponseEntity.ok(friendService.getFriendRequestsForUser(userId));
+    }
+    @GetMapping("/ids")
+    public ResponseEntity<Set<Long>> getFriendIdsForUser(@RequestParam(name = "userId") long userId){
+        return ResponseEntity.ok(friendService.getFriendIdsForUser(userId));
     }
     @GetMapping("/add")
     public ResponseEntity<Set<Friend>> sendFriendRequest(@RequestParam(name = "userId") long userId,

@@ -10,6 +10,6 @@ import java.util.List;
 @FeignClient(name = "FRIEND-SERVICE")
 public interface FriendServiceClient {
 
-    @GetMapping("/friends")
+    @GetMapping("/friends/ids")
     List<Long> getFriendsForUser(@RequestParam("userId") long userId);
 }

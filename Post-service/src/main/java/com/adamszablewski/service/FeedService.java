@@ -2,9 +2,11 @@ package com.adamszablewski.service;
 
 import com.adamszablewski.classes.Feed;
 import com.adamszablewski.classes.Post;
+import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.feign.FriendServiceClient;
 import com.adamszablewski.repository.FeedRepository;
 import com.adamszablewski.repository.PostRepository;
+import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +21,9 @@ public class FeedService {
     private final PostRepository postRepository;
     private final FriendServiceClient friendServiceClient;
     private final FeedRepository feedRepository;
+    private final Mapper mapper;
 
-    public List<Post> getFeedForUser(long userId){
+    public List<PostDto> getFeedForUser(long userId){
         Feed feed = feedRepository.findByUserId(userId)
                 .orElse(
                         Feed.builder()
@@ -30,7 +33,8 @@ public class FeedService {
                 );
 
         updateFeed(feed);
-        return feed.getPosts();
+        feedRepository.save(feed);
+        return mapper.mapPostToDto(feed.getPosts());
 
     }
 
@@ -42,8 +46,16 @@ public class FeedService {
      */
     private void updateFeed(Feed feed){
         List<Long> friends = friendServiceClient.getFriendsForUser(feed.getUserId());
+        System.out.println(friends);
         PriorityQueue<Post> newPosts = new PriorityQueue<>(Comparator.comparing(Post::getDateTime));
-
+        List<Post> userPosts = postRepository.getAllByUserId(feed.getUserId());
+        if (userPosts != null){
+            userPosts.forEach(post -> {
+                if (!feed.getPosts().contains(post)){
+                    newPosts.add(post);
+                }
+            });
+        }
         friends.forEach(friend -> {
             List<Post> posts = postRepository.getAllByUserId(friend);
             posts.forEach(post -> {

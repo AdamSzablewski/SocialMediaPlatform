@@ -22,6 +22,8 @@ public class Post implements Commentable, Likeable{
     private long userId;
     private String text;
     private String multimediaId;
+    @ManyToMany(mappedBy = "posts")
+    List<Feed> feeds;
     @OneToMany
     private Set<Upvote> likes;
     private String description;

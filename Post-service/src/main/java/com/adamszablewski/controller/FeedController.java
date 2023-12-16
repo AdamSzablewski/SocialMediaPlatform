@@ -1,6 +1,7 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.classes.Post;
+import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.FeedService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class FeedController {
     private final FeedService feedService;
 
     @GetMapping()
-    public ResponseEntity<List<Post>> getFeedForUser(@RequestParam("userId") long userId){
+    public ResponseEntity<List<PostDto>> getFeedForUser(@RequestParam("userId") long userId){
         return ResponseEntity.status(HttpStatus.OK).body(feedService.getFeedForUser(userId));
 
     }

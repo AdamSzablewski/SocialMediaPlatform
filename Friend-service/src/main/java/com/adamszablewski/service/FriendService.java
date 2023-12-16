@@ -4,7 +4,6 @@ import com.adamszablewski.classes.Friend;
 import com.adamszablewski.classes.FriendList;
 import com.adamszablewski.classes.FriendRequest;
 import com.adamszablewski.classes.FriendRequestStatus;
-import com.adamszablewski.dtos.FriendDto;
 import com.adamszablewski.dtos.FriendListDto;
 import com.adamszablewski.exceptions.NoFriendRequestException;
 import com.adamszablewski.exceptions.NoSuchUserException;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -35,10 +34,21 @@ public class FriendService {
     public FriendListDto getFriendsForUser(long userId) {
         Friend friend = friendRepository.findByUserId(userId)
                 .orElse(null);
+
         if (friend == null){
             return null;
         }
         return mapper.mapFriendlistToDto(friend.getFriendList());
+    }
+    public Set<Long> getFriendIdsForUser(long userId) {
+        Friend friend = friendRepository.findByUserId(userId)
+                .orElse(null);
+        if (friend == null){
+            return null;
+        }
+        System.out.println(friend.getFriendList());
+        System.out.println(mapper.convertObjectListToIdSet(friend.getFriendList().getFriends()));
+        return  mapper.convertObjectToUserId(friend.getFriendList().getFriends());
     }
 
     public void removeFriend(long user1Id, long user2Id) {
@@ -90,12 +100,10 @@ public class FriendService {
     }
 
     public void sendFriendRequest(long userId, long friendId) {
-        String username = userServiceClient.getusernameFromId(userId);
         FriendRequest friendRequest = FriendRequest.builder()
                 .status(FriendRequestStatus.RECEIVED)
                 .dateTime(LocalDateTime.now())
                 .senderId(userId)
-                .senderUsername(username)
                 .receiverId(friendId)
                 .build();
 
@@ -130,5 +138,10 @@ public class FriendService {
         else{
             declineFriendRequest(friendRequest);
         }
+    }
+
+
+    public List<FriendRequest> getFriendRequestsForUser(long userId) {
+        return friendRequestRepository.findByReceiverId(userId);
     }
 }

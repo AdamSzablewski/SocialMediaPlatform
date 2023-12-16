@@ -29,7 +29,7 @@ public class CommentController {
     public ResponseEntity<String> deleteCommentsForPost(@RequestParam(name = "postId") long postId,
                                                       @RequestParam(name = "commentId") long commentId){
         commentService.deleteCommentForPost(postId, commentId);
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteComment(@RequestParam(name = "commentId") long commentId){

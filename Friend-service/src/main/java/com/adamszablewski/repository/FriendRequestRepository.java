@@ -12,7 +12,7 @@ import java.util.Set;
 @Repository
 public interface FriendRequestRepository extends JpaRepository<FriendRequest, Long> {
 
-
+    List<FriendRequest> findByReceiverId(long userId);
 
 
 }

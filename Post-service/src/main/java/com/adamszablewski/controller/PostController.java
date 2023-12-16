@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @AllArgsConstructor
@@ -29,6 +32,13 @@ public class PostController {
     public ResponseEntity<String> postPost(@RequestBody PostDto post,
                                            @RequestParam(name = "userId") long userId){
         postService.postPost(post, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/image")
+    public ResponseEntity<String> postImagePost(@RequestBody PostDto post,
+                                                @RequestParam(name = "userId") long userId,
+                                                @RequestParam MultipartFile image) throws IOException {
+        postService.postImagePost(post, userId, image);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @DeleteMapping("/delete")

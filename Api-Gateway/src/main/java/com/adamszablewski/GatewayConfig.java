@@ -42,6 +42,9 @@ public class GatewayConfig {
                 .route("friend-service", r -> r
                         .path("/friends/**")
                         .uri("lb://FRIEND-SERVICE"))
+                .route("post-service", r -> r
+                        .path("/posts/**")
+                        .uri("lb://POST-SERVICE"))
                 .route("eureka-status", r -> r
                         .path("/eureka/**")
                         .uri("http://localhost:8761"))
