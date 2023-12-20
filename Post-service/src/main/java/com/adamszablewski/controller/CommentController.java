@@ -25,6 +25,19 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getCommentsForComment(@RequestParam(name = "commentId") long commentId){
         return new ResponseEntity<>(commentService.getCommentsForComment(commentId), HttpStatus.OK);
     }
+    @PostMapping()
+    public ResponseEntity<String> postCommentsForPost(@RequestParam(name = "postId") long postId,
+                                                      @RequestBody Comment comment){
+        commentService.postCommentForPost(postId, comment);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/comment")
+    public ResponseEntity<String> postCommentsForComment(@RequestParam(name = "commentId") long commentId,
+                                                         @RequestBody Comment comment){
+        commentService.postCommentForComment(commentId, comment);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping()
     public ResponseEntity<String> deleteCommentsForPost(@RequestParam(name = "postId") long postId,
                                                       @RequestParam(name = "commentId") long commentId){

@@ -1,4 +1,4 @@
-package com.adamszablewski.rabbitMqConsumer;
+package com.adamszablewski.rabbitMq;
 
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

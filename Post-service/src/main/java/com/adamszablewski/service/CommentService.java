@@ -3,14 +3,15 @@ package com.adamszablewski.service;
 import com.adamszablewski.classes.Comment;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.exceptions.NoSuchCommentException;
+import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.repository.CommentRepository;
 import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.utils.Dao;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,5 +51,33 @@ public class CommentService {
         List<Comment> comments = comment.getAnswers();
         comments.add(comment);
         dao.deleteComment(comments);
+    }
+    @Transactional
+    public void postCommentForPost(long postId, Comment commentData) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(NoSuchPostException::new);
+        Comment comment = Comment.builder()
+                .text(commentData.getText())
+                .userId(commentData.getUserId())
+                .build();
+        post.getComments().add(comment);
+        commentRepository.save(comment);
+        postRepository.save(post);
+    }
+    @Transactional
+    public void postCommentForComment(long commentId, Comment commentData) {
+        Comment parent = commentRepository.findById(commentId)
+                .orElseThrow(NoSuchCommentException::new);
+        Comment comment = Comment.builder()
+                .text(commentData.getText())
+                .userId(commentData.getUserId())
+                .build();
+
+        if (comment.getAnswers() == null){
+             parent.setAnswers(new ArrayList<>());
+        }
+        parent.getAnswers().add(comment);
+        commentRepository.save(comment);
+        commentRepository.save(parent);
     }
 }

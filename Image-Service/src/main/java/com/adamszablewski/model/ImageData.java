@@ -17,6 +17,8 @@ public class ImageData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private long userId;
+    private String multimediaId;
     private String name;
     private String type;
     private LocalDate date;

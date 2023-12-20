@@ -21,6 +21,7 @@ public class RabbitMqConfig {
 
 
     public static final String USER_DELETED_QUEUE = "UserDeletionQueue";
+    public static final String IMAGE_DELETED_QUEUE = "deleteImage";
     //public static final String TEXT_MESSAGE_QUEUE = "textMessageQueue";
     public static final String MESSAGE_MEASSAGE_QUEUE = "MessageQueue";
     public static final String EXCHANGE_NAME = "BookingMessageExchange";

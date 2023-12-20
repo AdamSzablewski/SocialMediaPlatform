@@ -2,8 +2,10 @@ package com.adamszablewski.utils;
 
 
 
+import com.adamszablewski.classes.Comment;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.classes.Upvote;
+import com.adamszablewski.dtos.CommentDto;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.dtos.UpvoteDto;
 import com.adamszablewski.interfaces.Identifiable;
@@ -36,12 +38,30 @@ public class Mapper {
     }
     public PostDto mapPostToDto(Post post){
         return PostDto.builder()
+                .id(post.getId())
+                .userId(post.getUserId())
                 .userLikeIds(mapUpvoteDto(post.getLikes()))
                 .likes(countLikes(post))
+                .comments(mapCommentToDto(post.getComments()))
                 .text(post.getText())
                 .multimediaId(post.getMultimediaId())
                 .description(post.getDescription())
                 .build();
+    }
+    public CommentDto mapCommentToDto(Comment comment){
+        return CommentDto.builder()
+                .id(comment.getId())
+                .text(comment.getText())
+                .answers(mapCommentToDto(comment.getAnswers()))
+                .userId(comment.getUserId())
+                .likes(mapUpvoteDto(comment.getLikes()))
+                .build();
+
+    }
+    public List<CommentDto> mapCommentToDto(List<Comment> comments){
+        return comments.stream()
+                .map(this::mapCommentToDto)
+                .collect(Collectors.toList());
     }
     public UpvoteDto mapUpvoteDto(Upvote upvote){
         return UpvoteDto.builder()

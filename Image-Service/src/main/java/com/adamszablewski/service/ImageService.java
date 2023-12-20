@@ -2,6 +2,7 @@ package com.adamszablewski.service;
 
 
 import com.adamszablewski.exceptions.FileNotFoundException;
+import com.adamszablewski.exceptions.NoSuchImageException;
 import com.adamszablewski.exceptions.NotAuthorizedException;
 import com.adamszablewski.feign.BookingClient;
 import com.adamszablewski.model.*;
@@ -23,50 +24,28 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
     private final ProfilePhotoRepository profilePhotoRepository;
-    private final FacilityPhotoRepository facilityPhotoRepository;
     private final MessagePhotoRepository messagePhotoRepository;
     private final UniqueIdGenerator uniqueIdGenerator;
     private final UserValidator userValidator;
     private final BookingClient bookingClient;
-    private final PortfolioRepository portfolioRepository;
+    private final PostPhotoRepository postPhotoRepository;
 
-    private ImageData uploadImage(MultipartFile file) throws IOException {
+    private ImageData uploadImage(MultipartFile file, String imageId) throws IOException {
         return imageRepository.save(ImageData.builder()
                 .type(file.getContentType())
                 .name(file.getOriginalFilename())
+                .multimediaId(imageId)
                 .imageData(ImageUtils.compressImage(file.getBytes()))
                 .build());
 
     }
-    private ImageData uploadImage(byte[] imageData) throws IOException {
+    private ImageData uploadImage(byte[] imageData,String imageId) throws IOException {
         return imageRepository.save(ImageData.builder()
                 .type("image/jpeg")
+                .multimediaId(imageId)
                 .imageData(ImageUtils.compressImage(imageData))
                 .build());
 
-    }
-
-    @Transactional
-    public void addFacilityImage(long id, MultipartFile file, String userEmail, long userId) throws IOException {
-
-        if (!userValidator.isOwner(id, userEmail)){
-            throw new NotAuthorizedException();
-        }
-        facilityPhotoRepository.deleteAllByFacilityId(id);
-        ImageData image = uploadImage(file);
-        FacilityPhoto facilityPhoto = FacilityPhoto.builder()
-                .facilityId(id)
-                .userId(userId)
-                .image(image)
-                .build();
-        facilityPhotoRepository.save(facilityPhoto);
-    }
-    @Transactional
-    public byte[] getImageForFacility(long id) {
-         FacilityPhoto facilityPhoto = facilityPhotoRepository.findByFacilityId(id)
-                 .orElseThrow(FileNotFoundException::new);
-         byte[] imageData = facilityPhoto.getImage().getImageData();
-         return ImageUtils.decompressImage(imageData);
     }
     @Transactional
     public byte[] getImageForUser(long id) {
@@ -82,7 +61,8 @@ public class ImageService {
             throw new NotAuthorizedException();
         }
         profilePhotoRepository.deleteByUserId(id);
-        ImageData image = uploadImage(file);
+        String imageId = uniqueIdGenerator.generateUniqueImageId();
+        ImageData image = uploadImage(file, imageId);
         ProfilePhoto profilePhoto = ProfilePhoto.builder()
                 .userId(id)
                 .image(image)
@@ -91,8 +71,7 @@ public class ImageService {
     }
     @Transactional
     public void deleteImagesForUser(long userId) {
-        facilityPhotoRepository.deleteAllByUserId(userId);
-        portfolioRepository.deleteAllByUserId(userId);
+        postPhotoRepository.deleteAllByUserId(userId);
         profilePhotoRepository.deleteByUserId(userId);
     }
     @Transactional
@@ -104,46 +83,62 @@ public class ImageService {
 
     }
     @Transactional
-    public void deleteFacilityImage(long facilityID, String userEmail) {
-        if (!userValidator.isOwner(facilityID, userEmail)){
-            throw new NotAuthorizedException();
-        }
-        facilityPhotoRepository.deleteByFacilityId(facilityID);
-    }
-    @Transactional
-    public void addMessageImage(byte[] file, String imageId, Set<Long> recipients) throws IOException {
+    public String addMessageImage(byte[] file, Set<Long> recipients) throws IOException {
 
-        ImageData image = uploadImage(file);
+
+        String imageId = uniqueIdGenerator.generateUniqueImageId();
+        ImageData image = uploadImage(file, imageId);
         MessagePhoto messagePhoto = MessagePhoto.builder()
                 .users(recipients)
-                .imageId(imageId)
+                .multimediaId(imageId)
                 .image(image)
                 .build();
         messagePhotoRepository.save(messagePhoto);
+        return imageId;
     }
     @Transactional
     public byte[] getImageForMessage(String imageId, long userId) {
-        MessagePhoto messagePhoto = messagePhotoRepository.findByImageId(imageId)
+        MessagePhoto messagePhoto = messagePhotoRepository.findByMultimediaId(imageId)
                 .orElseThrow(FileNotFoundException::new);
         if (messagePhoto.getUsers().stream().noneMatch(id -> messagePhoto.getUsers().contains(userId))){
             throw new NotAuthorizedException();
         }
         return ImageUtils.decompressImage(messagePhoto.getImage());
     }
+
     @Transactional
-    public void addPortfolioImage(MultipartFile file, long facilityId, String userEmail, long userId) throws IOException {
-        if(!userValidator.isOwner(facilityId, userEmail)){
-            throw new NotAuthorizedException();
-        }
-        ImageData image = uploadImage(file);
+    public String addPostImage(byte[] imageArray, long userId) throws IOException {
+//        if(!userValidator.isOwner(facilityId, userEmail)){
+//            throw new NotAuthorizedException();
+//        }
+
         String imageId = uniqueIdGenerator.generateUniqueImageId();
-        PortfolioPhoto portfolioPhoto = PortfolioPhoto.builder()
+        ImageData image = uploadImage(imageArray, imageId);
+        PostPhoto postPhoto = PostPhoto.builder()
                 .userId(userId)
-                .facility(facilityId)
-                .imageId(imageId)
-                .imageData(image)
+                .image(image)
+                .multimediaId(imageId)
                 .build();
-        portfolioRepository.save(portfolioPhoto);
-        bookingClient.addPortfolioImage(imageId, facilityId);
+
+        postPhotoRepository.save(postPhoto);
+        return imageId;
+    }
+
+    public void removePostImage(long postId) {
+        postPhotoRepository.deleteByPostId(postId);
+    }
+
+    public byte[] getImageByImageId(String mltimediaId) {
+        ImageData image = imageRepository.findByMultimediaId(mltimediaId)
+                .orElseThrow(NoSuchImageException::new);
+        return ImageUtils.decompressImage(image.getImageData());
+    }
+
+    public void delteImageWithMultimediaId(String multimediaId) {
+        imageRepository.deleteByMultimediaId(multimediaId);
+        messagePhotoRepository.deleteByMultimediaId(multimediaId);
+        postPhotoRepository.deleteByMultimediaId(multimediaId);
+        profilePhotoRepository.deleteByMultimediaId(multimediaId);
+
     }
 }

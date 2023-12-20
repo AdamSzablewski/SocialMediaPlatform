@@ -15,9 +15,12 @@ import java.util.Set;
 @Builder
 @Data
 public class PostDto {
+    private long id;
+    private long userId;
     private String text;
     private String multimediaId;
     private int likes;
+    private List<CommentDto> comments;
     private Set<UpvoteDto> userLikeIds;
     private String description;
 }

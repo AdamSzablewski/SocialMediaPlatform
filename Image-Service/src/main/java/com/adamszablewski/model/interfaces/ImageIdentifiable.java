@@ -1,2 +1,6 @@
-package com.adamszablewski.model.interfaces;public interface ImageIdentifiable {
+package com.adamszablewski.model.interfaces;
+
+public interface ImageIdentifiable {
+
+    String getMultimediaId();
 }

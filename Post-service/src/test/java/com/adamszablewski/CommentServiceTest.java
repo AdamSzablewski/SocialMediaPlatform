@@ -1,4 +1,4 @@
-package adamszablewski;
+package com.adamszablewski;
 
 import com.adamszablewski.classes.Comment;
 import com.adamszablewski.classes.Post;
@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,17 +50,23 @@ public class CommentServiceTest {
         Comment comment = Comment.builder()
                 .id(1L)
                 .build();
+        Comment comment2 = Comment.builder()
+                .id(2L)
+                .build();
         Post post = Post.builder()
                 .id(1L)
                 .comments(new ArrayList<>())
                 .build();
-        post.getComments().add(comment);
+        post.getComments().addAll(List.of(comment, comment2));
 
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 
         commentService.deleteCommentForPost(postId, commentId);
 
         assertThat(post.getComments().contains(comment)).isFalse();
+        assertThat(post.getComments().contains(comment2)).isTrue();
+        verify(dao).deleteComment(eq(comment));
+
     }
 
 

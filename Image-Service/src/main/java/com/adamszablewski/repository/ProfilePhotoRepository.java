@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ProfilePhotoRepository extends JpaRepository<ProfilePhoto, Long> {
     void deleteByUserId(long id);
     Optional<ProfilePhoto> findByUserId(long id);
+
+    void deleteByMultimediaId(String multimediaId);
 }

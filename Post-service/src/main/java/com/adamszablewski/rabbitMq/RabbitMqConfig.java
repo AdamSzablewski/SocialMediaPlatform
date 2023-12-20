@@ -1,4 +1,4 @@
-package com.adamszablewski.rabbitMqConsumer;
+package com.adamszablewski.rabbitMq;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ public class RabbitMqConfig {
     public static final String USER_DELETED_QUEUE = "UserDeletionQueue";
     public static final String FRIEND_REQUEST_QUEUE = "FriendRequestQueue";
 
-    public static final String EXCHANGE_NAME = "messageExchange";
+    public static final String EXCHANGE_NAME = "SocialApp";
 
 @Bean
 public MessageConverter jsonMessageConverter() {

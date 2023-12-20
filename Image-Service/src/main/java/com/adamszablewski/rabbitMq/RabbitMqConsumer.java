@@ -25,4 +25,11 @@ public class RabbitMqConsumer {
         System.out.println("||| Delete user : |||||| "+ userId);
         imageService.deleteImagesForUser(userId);
     }
+    @RabbitListener(queues = RabbitMqConfig.IMAGE_DELETED_QUEUE)
+    public void consume(String multimediaId){
+
+        System.out.println("||| Delete image : |||||| "+ multimediaId);
+        imageService.delteImageWithMultimediaId(multimediaId);
+
+    }
 }

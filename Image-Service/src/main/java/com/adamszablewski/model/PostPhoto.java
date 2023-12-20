@@ -1,5 +1,6 @@
 package com.adamszablewski.model;
 
+import com.adamszablewski.model.interfaces.ImageIdentifiable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FacilityPhoto {
+public class PostPhoto implements ImageIdentifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long facilityId;
+    private long postId;
+    private String multimediaId;
     private long userId;
     @OneToOne(cascade = CascadeType.ALL)
     @Lob

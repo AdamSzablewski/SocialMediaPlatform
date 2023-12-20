@@ -11,6 +11,7 @@
         <module>Messeging-Service</module>
         <module>Eureka</module>
         <module>Security-Service</module>
+        <module>Image-Service</module>
     </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

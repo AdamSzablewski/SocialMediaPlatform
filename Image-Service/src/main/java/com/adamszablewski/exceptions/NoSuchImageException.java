@@ -1,12 +1,12 @@
 package com.adamszablewski.exceptions;
 
-public class NotAuthorizedException extends RuntimeException{
+public class NoSuchImageException extends RuntimeException{
     private static final String DEFAULT_MESSAGE = "Not authorized for this action";
 
-    public NotAuthorizedException(String message) {
+    public NoSuchImageException(String message) {
         super(message);
     }
-    public NotAuthorizedException() {
+    public NoSuchImageException() {
         super(DEFAULT_MESSAGE);
     }
 }

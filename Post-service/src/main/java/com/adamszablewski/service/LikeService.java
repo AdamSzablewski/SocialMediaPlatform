@@ -2,7 +2,7 @@ package com.adamszablewski.service;
 
 import com.adamszablewski.classes.Comment;
 import com.adamszablewski.classes.Upvote;
-import com.adamszablewski.classes.Likeable;
+import com.adamszablewski.interfaces.Likeable;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.exceptions.NoSuchCommentException;
 import com.adamszablewski.exceptions.NoSuchPostException;
@@ -45,8 +45,9 @@ public class LikeService {
         if(!alreadyLiked){
             post.getLikes().add(newLike);
         }
-        postRepository.save(post);
         likeRepository.save(newLike);
+        postRepository.save(post);
+
 
     }
     @Transactional

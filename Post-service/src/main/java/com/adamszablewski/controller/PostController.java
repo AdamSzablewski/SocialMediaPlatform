@@ -34,12 +34,17 @@ public class PostController {
         postService.postPost(post, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PostMapping("/image")
-    public ResponseEntity<String> postImagePost(@RequestBody PostDto post,
-                                                @RequestParam(name = "userId") long userId,
+    @PostMapping("/image/upload")
+    public ResponseEntity<String> uploadImageForPost(@RequestParam(name = "userId") long userId,
                                                 @RequestParam MultipartFile image) throws IOException {
-        postService.postImagePost(post, userId, image);
-        return new ResponseEntity<>(HttpStatus.OK);
+        String multimediaId = postService.postImagePost(userId, image);
+        return ResponseEntity.ok(multimediaId);
+    }
+    @PostMapping("/image")
+    public ResponseEntity<String> publishImagePost(@RequestParam(name = "multimediaId") String multimediaId,
+                                                     @RequestBody PostDto postDto ) {
+        postService.publishImagePost(multimediaId, postDto);
+        return ResponseEntity.ok().build();
     }
     @DeleteMapping("/delete")
     public ResponseEntity<String> deletePost(@RequestParam(name = "postId") long postId){

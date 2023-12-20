@@ -1,5 +1,6 @@
 package com.adamszablewski.model;
 
+import com.adamszablewski.model.interfaces.ImageIdentifiable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +14,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessagePhoto {
+public class MessagePhoto implements ImageIdentifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "imageIdentity")
-    private String imageId;
+    private String multimediaId;
     private Set<Long> users;
     @OneToOne(cascade = CascadeType.ALL)
     @Lob

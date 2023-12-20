@@ -1,15 +1,17 @@
 package com.adamszablewski.repository;
 
-import com.adamszablewski.model.PortfolioPhoto;
+import com.adamszablewski.model.PostPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface PortfolioRepository extends JpaRepository<PortfolioPhoto, Long> {
+public interface PostPhotoRepository extends JpaRepository<PostPhoto, Long> {
 
-    Optional<PortfolioPhoto> findByFacility(long facilityId);
+
 
     void deleteAllByUserId(long userId);
+
+    void deleteByPostId(long postId);
+
+    void deleteByMultimediaId(String multimediaId);
 }
