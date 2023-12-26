@@ -1,9 +1,6 @@
 package com.adamszablewski.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -39,5 +36,12 @@ public class JwtUtil {
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey()).build().parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class);
     }
 }

@@ -8,6 +8,7 @@ import com.adamszablewski.exception.MissingFeignValueException;
 import com.adamszablewski.feign.BookingServiceClient;
 import com.adamszablewski.feign.UserServiceClient;
 import com.adamszablewski.util.JwtUtil;
+import com.adamszablewski.util.TokenGenerator;
 import com.adamszablewski.util.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ public class SecurityService {
     private final UserServiceClient userServiceClient;
     private final JwtUtil jwtUtil;
     private final UserValidator userValidator;
+    private final TokenGenerator tokenGenerator;
     public boolean validateUser(LoginDto loginDto) {
         RestResponseDTO<String> response = userServiceClient.getHashedPassword(loginDto.getEmail());
         if(response.getValue() == null){
@@ -53,5 +55,14 @@ public class SecurityService {
 
     public String hashPassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    public long extractUserIdFromToken(String token) {
+        return jwtUtil.getUserIdFromToken(token);
+    }
+
+    public String generateToken(String email) {
+        long userId = userServiceClient.getUserIdFromUsername(email);
+        return tokenGenerator.generateToken(userId);
     }
 }

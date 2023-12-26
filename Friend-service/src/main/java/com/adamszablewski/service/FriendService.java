@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,14 +41,12 @@ public class FriendService {
         }
         return mapper.mapFriendlistToDto(friend.getFriendList());
     }
-    public Set<Long> getFriendIdsForUser(long userId) {
+    public List<Long> getFriendIdsForUser(long userId) {
         Friend friend = friendRepository.findByUserId(userId)
                 .orElse(null);
         if (friend == null){
             return null;
         }
-        System.out.println(friend.getFriendList());
-        System.out.println(mapper.convertObjectListToIdSet(friend.getFriendList().getFriends()));
         return  mapper.convertObjectToUserId(friend.getFriendList().getFriends());
     }
 
@@ -75,20 +74,22 @@ public class FriendService {
                 .orElseGet(() -> createFriendForUser(user1Id));
         Friend user2 = friendRepository.findByUserId(user2Id)
                 .orElseGet(() -> createFriendForUser(user2Id));
-
+        if (user1.getFriendList().getFriends() == null) {
+            user1.getFriendList().setFriends(new ArrayList<>());
+        }
+        if (user2.getFriendList().getFriends() == null) {
+            user2.getFriendList().setFriends(new ArrayList<>());
+        }
         user1.getFriendList().getFriends().add(user2);
         user2.getFriendList().getFriends().add(user1);
 
-        friendRepository.save(user1);
         friendListRepository.save(user1.getFriendList());
-        friendRepository.save(user2);
         friendListRepository.save(user2.getFriendList());
     }
 
     private Friend createFriendForUser(long user1Id) {
 
         FriendList friendList =  FriendList.builder()
-                .friends(new HashSet<>())
                 .build();
         friendListRepository.save(friendList);
         Friend friend = Friend.builder()
@@ -116,8 +117,8 @@ public class FriendService {
         addFriend(friendRequest.getReceiverId(), friendRequest.getSenderId());
         friendRequest.setStatus(FriendRequestStatus.ACCEPTED);
 
-        rabbitMqProducer.sendFriendRequest(friendRequest);
         friendRequestRepository.save(friendRequest);
+        rabbitMqProducer.sendFriendRequest(friendRequest);
     }
 
     private void declineFriendRequest(FriendRequest friendRequest) {

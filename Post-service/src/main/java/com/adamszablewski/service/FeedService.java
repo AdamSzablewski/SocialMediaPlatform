@@ -4,11 +4,13 @@ import com.adamszablewski.classes.Feed;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.feign.FriendServiceClient;
-import com.adamszablewski.repository.FeedRepository;
+
 import com.adamszablewski.repository.PostRepository;
+import com.adamszablewski.utils.CustomSortingUtil;
 import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -20,20 +22,16 @@ public class FeedService {
 
     private final PostRepository postRepository;
     private final FriendServiceClient friendServiceClient;
-    private final FeedRepository feedRepository;
     private final Mapper mapper;
+    private final CustomSortingUtil feedUtil;
 
     public List<PostDto> getFeedForUser(long userId){
-        Feed feed = feedRepository.findByUserId(userId)
-                .orElse(
-                        Feed.builder()
+        Feed feed = Feed.builder()
                         .userId(userId)
                         .posts(new LinkedList<>())
-                        .build()
-                );
+                        .build();
 
         updateFeed(feed);
-        feedRepository.save(feed);
         return mapper.mapPostToDto(feed.getPosts());
 
     }
@@ -44,28 +42,14 @@ public class FeedService {
      * @param feed
      *
      */
+    @Transactional
     private void updateFeed(Feed feed){
         List<Long> friends = friendServiceClient.getFriendsForUser(feed.getUserId());
-        System.out.println(friends);
         PriorityQueue<Post> newPosts = new PriorityQueue<>(Comparator.comparing(Post::getDateTime));
-        List<Post> userPosts = postRepository.getAllByUserId(feed.getUserId());
-        if (userPosts != null){
-            userPosts.forEach(post -> {
-                if (!feed.getPosts().contains(post)){
-                    newPosts.add(post);
-                }
-            });
-        }
-        friends.forEach(friend -> {
-            List<Post> posts = postRepository.getAllByUserId(friend);
-            posts.forEach(post -> {
-                if (!feed.getPosts().contains(post)){
-                    newPosts.add(post);
-                }
-            });
+        addPostsForUserIdToList(feed, newPosts, feed.getUserId());
 
+        friends.forEach(friendId -> addPostsForUserIdToList(feed, newPosts, friendId));
 
-        });
         while (!newPosts.isEmpty()){
             Post post = newPosts.poll();
             if(feed.getPosts().size() < MAX_FEED_SIZE){
@@ -75,8 +59,19 @@ public class FeedService {
                 feed.getPosts().add(0, post);
             }
         }
-        feedRepository.save(feed);
+
     }
+    private void addPostsForUserIdToList(Feed feed, Collection<Post> newPosts, long userId){
+        List<Post> posts = postRepository.getAllByUserId(userId);
+        posts.forEach(post -> {
+            if (!feed.getPosts().contains(post)){
+                feedUtil.sortComments(post);
+                newPosts.add(post);
+            }
+        });
+
+    }
+
 
 
 

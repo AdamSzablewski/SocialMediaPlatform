@@ -14,13 +14,13 @@ import static com.adamszablewski.config.SecurityConstant.JWT_SECRET;
 @Component
 public class TokenGenerator {
 
-    public String generateToken(String username){
+    public String generateToken(long userId){
 
         Date currentDate = new Date();
         Date expireDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
 
         return Jwts.builder()
-                .setSubject(username)
+                .claim("userId", userId)
                 .setIssuedAt(currentDate)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)

@@ -34,15 +34,20 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody LoginDto user){
 
         securityService.validateUser(user);
-        String token = tokenGenerator.generateToken(user.getEmail());
+        String token = securityService.generateToken(user.getEmail());
         return ResponseEntity.ok(token);
     }
+
     @GetMapping("/hash")
     public ResponseEntity<String> hashPassword(@RequestParam(name = "password") String password){
 
         return ResponseEntity.ok(securityService.hashPassword(password));
     }
+    @GetMapping("/extract")
+    public ResponseEntity<Long> extractUserIdFromToken(@RequestParam(name = "token") String token){
 
+        return ResponseEntity.ok(securityService.extractUserIdFromToken(token));
+    }
     @GetMapping("/validate/owner/facilityID/{facilityId}/user/{userMail}")
     public ResponseEntity<RestResponseDTO<Boolean>> validateOwner(@PathVariable Long facilityId,@PathVariable String userMail){
         RestResponseDTO<Boolean> response = RestResponseDTO.<Boolean>builder()

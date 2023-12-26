@@ -1,5 +1,6 @@
 package com.adamszablewski.controller;
 
+import com.adamszablewski.annotations.SecureResource;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.PostService;
@@ -20,10 +21,12 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping()
+    @SecureResource
     public ResponseEntity<Post> getPostById(@RequestParam(name = "postId") long postId){
        return new ResponseEntity<>(postService.getPostById(postId), HttpStatus.OK);
     }
     @DeleteMapping()
+    @SecureResource
     public ResponseEntity<String> deletePostById(@RequestParam(name = "postId") long postId){
         postService.deletePostById(postId);
         return new ResponseEntity<>(HttpStatus.OK);

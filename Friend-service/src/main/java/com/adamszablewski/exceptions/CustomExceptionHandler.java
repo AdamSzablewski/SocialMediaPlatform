@@ -1,7 +1,10 @@
 package com.adamszablewski.exceptions;
 
+import jakarta.ws.rs.NotAuthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.FileNotFoundException;
 
 public class CustomExceptionHandler {
 

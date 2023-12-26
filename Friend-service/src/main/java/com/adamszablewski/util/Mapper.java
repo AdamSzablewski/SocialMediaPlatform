@@ -10,9 +10,7 @@ import com.adamszablewski.interfaces.Identifiable;
 import com.adamszablewski.interfaces.UserResource;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -40,18 +38,16 @@ public class Mapper {
     }
     //todo add map useridendifiable mapper
 
-    public Set<FriendDto> mapFriendToDto(Set<Friend> friends){
+    public Set<FriendDto> mapFriendToDto(List<Friend> friends){
         Set<FriendDto> friendDtos = new HashSet<>();
         friends.forEach(friend -> friendDtos.add(mapFriendToDto(friend)));
         return friendDtos;
     }
 
-    public <T extends  UserResource> Set<Long> convertObjectToUserId(Set<T> userResource) {
-        Set<Long> userIds = new HashSet<>();
-        userResource.forEach(resource -> {
-            userIds.add(convertObjectToUserId(resource));
-        });
-        return userIds;
+    public <T extends  UserResource> List<Long> convertObjectToUserId(List<T> userResource) {
+        return userResource.stream()
+                .map(UserResource::getUserId)
+                .collect(Collectors.toList());
     }
     public <T extends  UserResource> Long convertObjectToUserId(T userResource) {
         return userResource.getUserId();

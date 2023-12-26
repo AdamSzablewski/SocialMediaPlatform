@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,7 @@ public class Comment implements Commentable, Likeable {
     private long id;
     private String text;
     private long userId;
+    private LocalDateTime dateTime;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Upvote> likes = new HashSet<>();
     @OneToMany

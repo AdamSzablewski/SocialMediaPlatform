@@ -66,4 +66,9 @@ public class PersonService {
     }
 
 
+    public long getUserIdForUsername(String email) {
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(NoSuchUserException::new);
+        return person.getId();
+    }
 }

@@ -69,5 +69,53 @@ public class CommentServiceTest {
 
     }
 
+    @Test
+    void postCommentForPostTest_should_post_comment() {
+        long postId = 1L;
+        Comment commentData = Comment.builder()
+                .text("New Comment")
+                .userId(1L)
+                .build();
+        Post post = Post.builder()
+                .id(postId)
+                .comments(new ArrayList<>())
+                .build();
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+
+        commentService.postCommentForPost(postId, commentData);
+
+        assertThat(post.getComments()).hasSize(1);
+        Comment postedComment = post.getComments().get(0);
+        assertThat(postedComment.getText()).isEqualTo("New Comment");
+        assertThat(postedComment.getUserId()).isEqualTo(1L);
+        verify(commentRepository).save(postedComment);
+        verify(postRepository).save(post);
+    }
+
+    @Test
+    void postCommentForCommentTest_should_post_comment_for_comment() {
+        long parentCommentId = 1L;
+        Comment parentComment = Comment.builder()
+                .id(parentCommentId)
+                .text("Parent Comment")
+                .userId(1L).build();
+        Comment commentData = Comment.builder()
+                .text("Reply Comment")
+                .userId(2L)
+                .build();
+
+        when(commentRepository.findById(parentCommentId)).thenReturn(Optional.of(parentComment));
+
+        commentService.postCommentForComment(parentCommentId, commentData);
+
+        assertThat(parentComment.getAnswers()).hasSize(1);
+        Comment postedComment = parentComment.getAnswers().get(0);
+        assertThat(postedComment.getText()).isEqualTo("Reply Comment");
+        assertThat(postedComment.getUserId()).isEqualTo(2L);
+        verify(commentRepository).save(postedComment);
+        verify(commentRepository).save(parentComment);
+    }
+
 
 }

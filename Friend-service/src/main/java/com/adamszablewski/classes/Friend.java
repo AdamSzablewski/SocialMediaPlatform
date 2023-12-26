@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,4 +22,16 @@ public class Friend implements Identifiable, UserResource {
     private long userId;
     @OneToOne
     private FriendList friendList;
+    @Override
+    public String toString() {
+        return "Friend{" +
+                "id=" + id +
+                ", userId=" + userId +
+                '}';
+    }
+
+//    @Override
+//    public long getUserId() {
+//        return userId;
+//    }
 }

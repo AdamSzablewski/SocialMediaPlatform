@@ -31,6 +31,12 @@ public class PersonController {
     public ResponseEntity<PersonDto> getPersonByEmail(@RequestParam(name = "email")String email){
         return ResponseEntity.ok(personService.getPerson(email));
     }
+    @GetMapping("/convert")
+    @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "userServiceRateLimiter")
+    public ResponseEntity<Long> getUserIdForUsername(@RequestParam(name = "email")String email){
+        return ResponseEntity.ok(personService.getUserIdForUsername(email));
+    }
     @GetMapping("/username")
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")
