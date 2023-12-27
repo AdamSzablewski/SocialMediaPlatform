@@ -26,12 +26,9 @@ public class SecurityService {
     private final UserValidator userValidator;
     private final TokenGenerator tokenGenerator;
     public boolean validateUser(LoginDto loginDto) {
-        RestResponseDTO<String> response = userServiceClient.getHashedPassword(loginDto.getEmail());
-        if(response.getValue() == null){
-            throw new MissingFeignValueException();
-        }
-        String hashedPassword = response.getValue();
-        if (!passwordEncoder.matches(loginDto.getPassword(), hashedPassword)){
+        String response = userServiceClient.getHashedPassword(loginDto.getEmail());
+
+        if (!passwordEncoder.matches(loginDto.getPassword(), response)){
             throw new InvalidCredentialsException();
         }
         return true;

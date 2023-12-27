@@ -24,6 +24,7 @@ public class SecurityUtil {
     public boolean ownsPost(long postId, String token) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchPostException::new);
+        System.out.println("owns post method called");
         long userId = securityServiceClient.extractUserIdFromToken(token);
         return post.getUserId() == userId;
     }

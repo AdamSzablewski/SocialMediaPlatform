@@ -4,6 +4,7 @@ import com.adamszablewski.annotations.SecureResource;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class PostController {
 
     @GetMapping()
     @SecureResource
-    public ResponseEntity<Post> getPostById(@RequestParam(name = "postId") long postId){
+    public ResponseEntity<Post> getPostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
        return new ResponseEntity<>(postService.getPostById(postId), HttpStatus.OK);
     }
     @DeleteMapping()

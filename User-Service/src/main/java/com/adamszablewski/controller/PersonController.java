@@ -43,6 +43,12 @@ public class PersonController {
     public ResponseEntity<String> getUsernameFromId(@RequestParam(name = "userId")long userId){
         return ResponseEntity.ok(personService.getUsernameFromId(userId));
     }
+    @GetMapping("/password/hashed")
+    @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "userServiceRateLimiter")
+    public ResponseEntity<String> getHashedPassword(@RequestParam("userEmail") String userEmail){
+        return ResponseEntity.ok(personService.getHashedPassword(userEmail));
+    }
     @PostMapping()
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")

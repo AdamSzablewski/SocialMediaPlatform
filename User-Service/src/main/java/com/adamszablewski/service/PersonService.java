@@ -71,4 +71,10 @@ public class PersonService {
                 .orElseThrow(NoSuchUserException::new);
         return person.getId();
     }
+
+    public String getHashedPassword(String username) {
+        Person person = personRepository.findByEmail(username)
+                .orElseThrow(NoSuchUserException::new);
+        return person.getPassword();
+    }
 }
