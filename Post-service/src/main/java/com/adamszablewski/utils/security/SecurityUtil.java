@@ -6,6 +6,7 @@ import com.adamszablewski.classes.Upvote;
 import com.adamszablewski.exceptions.NoSuchCommentException;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.exceptions.NoSuchUpvoteException;
+import com.adamszablewski.feign.ImageServiceClient;
 import com.adamszablewski.feign.SecurityServiceClient;
 import com.adamszablewski.repository.CommentRepository;
 import com.adamszablewski.repository.LikeRepository;
@@ -21,10 +22,10 @@ public class SecurityUtil {
     private final PostRepository postRepository;
     private final LikeRepository upvoteRepository;
     private final CommentRepository commentRepository;
+    private final ImageServiceClient imageServiceClient;
     public boolean ownsPost(long postId, String token) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchPostException::new);
-        System.out.println("owns post method called");
         long userId = securityServiceClient.extractUserIdFromToken(token);
         return post.getUserId() == userId;
     }
@@ -41,5 +42,11 @@ public class SecurityUtil {
                 .orElseThrow(NoSuchCommentException::new);
         long userId = securityServiceClient.extractUserIdFromToken(token);
         return comment.getUserId() == userId;
+    }
+
+    public boolean ownsMultimedia(long multimediaId, String token) {
+        long userId = securityServiceClient.extractUserIdFromToken(token);
+        long ownerForResource = imageServiceClient.getOwnerForMultimediaId(multimediaId);
+        return userId == ownerForResource;
     }
 }

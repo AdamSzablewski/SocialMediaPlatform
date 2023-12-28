@@ -4,6 +4,9 @@ import com.adamszablewski.annotations.SecureResource;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.PostService;
+import com.adamszablewski.utils.ExceptionHandler;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,39 +23,58 @@ import java.io.IOException;
 public class PostController {
 
     private final PostService postService;
+    private final ExceptionHandler exceptionHandler;
 
     @GetMapping()
-    @SecureResource
-    public ResponseEntity<Post> getPostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
+    public ResponseEntity<PostDto> getPostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
        return new ResponseEntity<>(postService.getPostById(postId), HttpStatus.OK);
     }
     @DeleteMapping()
     @SecureResource
-    public ResponseEntity<String> deletePostById(@RequestParam(name = "postId") long postId){
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> deletePostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
         postService.deletePostById(postId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping()
-    public ResponseEntity<String> postPost(@RequestBody PostDto post,
+    @SecureResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> postPost(HttpServletRequest servletRequest, @RequestBody PostDto post,
                                            @RequestParam(name = "userId") long userId){
         postService.postPost(post, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/image/upload")
-    public ResponseEntity<String> uploadImageForPost(@RequestParam(name = "userId") long userId,
+    @SecureResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> uploadImageForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
                                                 @RequestParam MultipartFile image) throws IOException {
         String multimediaId = postService.postImagePost(userId, image);
         return ResponseEntity.ok(multimediaId);
     }
     @PostMapping("/image")
-    public ResponseEntity<String> publishImagePost(@RequestParam(name = "multimediaId") String multimediaId,
-                                                     @RequestBody PostDto postDto ) {
+    @SecureResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> publishImagePost(HttpServletRequest servletRequest,
+                                                   @RequestParam(name = "multimediaId") String multimediaId,
+                                                   @RequestBody PostDto postDto ) {
         postService.publishImagePost(multimediaId, postDto);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deletePost(@RequestParam(name = "postId") long postId){
+    @SecureResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> deletePost(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> fallBackMethod(Throwable throwable){
+        return exceptionHandler.handleException(throwable);
     }
 }

@@ -9,6 +9,7 @@ import com.adamszablewski.rabbitMq.RabbitMqProducer;
 import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.repository.ProfileRepository;
 import com.adamszablewski.utils.Dao;
+import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,12 @@ public class PostService {
     private final ImageServiceClient imageServiceClient;
     private final ProfileRepository profileRepository;
     private final RabbitMqProducer rabbitMqProducer;
+    private final Mapper mapper;
     private final Dao dao;
-    public Post getPostById(long postId) {
-        return postRepository.findById(postId)
+    public PostDto getPostById(long postId) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchPostException::new);
+        return mapper.mapPostToDto(post);
     }
 
     public void deletePostById(long postId) {

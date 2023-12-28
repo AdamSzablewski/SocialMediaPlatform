@@ -57,6 +57,13 @@ public class ImageController {
         imageService.removePostImage(postId);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/owner/{multimediaId}")
+    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "imageServiceRateLimiter")
+    public ResponseEntity<Long> getOwnerForMultimediaId(@PathVariable() String multimediaId)
+    {
+        return ResponseEntity.ok(imageService.getOwnerForMultimediaId(multimediaId));
+    }
     @PostMapping("/message")
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")

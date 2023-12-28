@@ -141,4 +141,10 @@ public class ImageService {
         profilePhotoRepository.deleteByMultimediaId(multimediaId);
 
     }
+
+    public long getOwnerForMultimediaId(String multimediaId) {
+        ImageData imageData = imageRepository.findByMultimediaId(multimediaId)
+                .orElseThrow(NoSuchImageException::new);
+        return imageData.getUserId();
+    }
 }

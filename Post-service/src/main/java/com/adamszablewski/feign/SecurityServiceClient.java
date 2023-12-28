@@ -16,6 +16,6 @@ public interface SecurityServiceClient {
     boolean isUser(@PathVariable Long userId,@PathVariable String userEmail);
     @GetMapping("/security/hash")
     String hashPassword(@RequestParam("password") String password);
-    @GetMapping("security/extract")
+    @GetMapping("/security/extract")
     long extractUserIdFromToken(@RequestParam("token") String token);
 }

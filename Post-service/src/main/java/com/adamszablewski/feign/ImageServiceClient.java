@@ -13,4 +13,6 @@ public interface ImageServiceClient {
 
     @PostMapping("/images")
     String sendImageToImageServiceAndGetImageId(@RequestBody byte[] imageData, @RequestParam("userId") long userId);
+    @GetMapping("/images/owner/{multimediaId}")
+    long getOwnerForMultimediaId(@PathVariable long multimediaId);
 }

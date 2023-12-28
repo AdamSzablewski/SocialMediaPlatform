@@ -5,6 +5,7 @@ import com.adamszablewski.annotations.SecureResource;
 import com.adamszablewski.exceptions.SecurityException;
 import com.adamszablewski.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.NotAuthorizedException;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,18 +25,19 @@ public class SecureResourceAspect {
     @Before("@annotation(com.adamszablewski.annotations.SecureResource)")
     public void processSecureResource(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        System.out.println(Arrays.toString(args));
-        System.out.println("SECURITY ASPECT CALLED");
         for (Object arg : args) {
             if (arg instanceof HttpServletRequest request) {
                 String token = request.getHeader("token");
-                String postId = request.getHeader("postId");
-                String upvoteId =request.getHeader("upvoteId");
-                String commentId = request.getHeader("commentId");
+                String postId = request.getParameter("postId");
+                String upvoteId =request.getParameter("upvoteId");
+                String commentId = request.getParameter("commentId");
+                String multimediaId = request.getParameter("multimediaId");
+                //todo add validation for multimedia id
 
-                boolean validated = false;
-
-                System.out.println("validated status "+validated);
+                boolean validated;
+                if (token == null){
+                    throw new RuntimeException("Missing token exception");
+                }
                 if (postId != null && postId.length() > 0){
                     validated = securityUtil.ownsPost(Long.parseLong(postId), token);
                 }
@@ -45,11 +47,14 @@ public class SecureResourceAspect {
                 else if (commentId != null && commentId.length() > 0) {
                     validated = securityUtil.ownsComment(Long.parseLong(commentId), token);
                 }
+                else if (multimediaId != null && multimediaId.length() > 0) {
+                    validated = securityUtil.ownsMultimedia(Long.parseLong(multimediaId), token);
+                }
                 else{
                     throw new SecurityException();
                 }
                 if (!validated){
-                    throw new SecurityException();
+                    throw new NotAuthorizedException("Validation failed");
                 }
             }
         }
