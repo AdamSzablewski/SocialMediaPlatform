@@ -5,6 +5,7 @@ import com.adamszablewski.dto.RestResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "SECURITY-SERVICE")
 public interface SecurityServiceClient {
@@ -14,4 +15,6 @@ public interface SecurityServiceClient {
     RestResponseDTO<Boolean> isEmployee(@PathVariable Long facilityId,@PathVariable String userEmail);
     @GetMapping("/security/validate/user/{userId}/{userEmail}")
     RestResponseDTO<Boolean> isUser(@PathVariable Long userId,@PathVariable String userEmail);
+    @GetMapping("/security/extract")
+    long extractUserIdFromToken(@RequestParam("token") String token);
 }

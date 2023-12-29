@@ -1,8 +1,9 @@
-package com.adamszablewski.utils.AOP;
+package com.adamszablewski.AOP;
 
 
-import com.adamszablewski.annotations.SecureResource;
+import com.adamszablewski.exceptions.MissingResourceHeaderException;
 import com.adamszablewski.exceptions.SecurityException;
+import com.adamszablewski.interfaces.UserResource;
 import com.adamszablewski.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -12,18 +13,16 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 
 @Aspect
 @Component
 @AllArgsConstructor
-public class SecureResourceAspect {
+public class SecureContentResourceAspect {
 
     private final SecurityUtil securityUtil;
 
-    @Before("@annotation(com.adamszablewski.annotations.SecureResource)")
-    public void processSecureResource(JoinPoint joinPoint) {
+    @Before("@annotation(com.adamszablewski.annotations.SecureContentResource)")
+    public void processSecureContentResource(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
             if (arg instanceof HttpServletRequest request) {
@@ -32,9 +31,11 @@ public class SecureResourceAspect {
                 String upvoteId =request.getParameter("upvoteId");
                 String commentId = request.getParameter("commentId");
                 String multimediaId = request.getParameter("multimediaId");
-                //todo add validation for multimedia id
 
                 boolean validated;
+                if (postId == null && upvoteId == null && commentId == null && multimediaId == null){
+                    throw new MissingResourceHeaderException();
+                }
                 if (token == null){
                     throw new RuntimeException("Missing token exception");
                 }

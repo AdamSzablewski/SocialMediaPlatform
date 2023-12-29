@@ -56,11 +56,7 @@ public class MessageService {
 
 
 
-    public void sendMessageToUserById(long recipientId, long senderId, String userEmail, Message message) {
-        RestResponseDTO<Boolean> response = securityServiceClient.isUser(senderId, userEmail);
-        if (response.getValue() == null ){
-            throw new NotAuthorizedException();
-        }
+    public void sendMessageToUserById(long recipientId, long senderId, Message message) {
         Conversation ownerConversation = conversationRepository.findByOwnerIdAndRecipientId(senderId, recipientId)
                 .orElseGet(()-> conversationCreator.createConversation(senderId, recipientId));
         Conversation recipientConversation = conversationRepository.findByOwnerIdAndRecipientId(recipientId, senderId)
@@ -92,11 +88,8 @@ public class MessageService {
         conversationRepository.saveAll(Set.of(ownerConversation, recipientConversation));
 
     }
-    public void sendImageToUserById(long recipientId, long senderId, String userEmail, MultipartFile image) throws IOException {
-        RestResponseDTO<Boolean> response = securityServiceClient.isUser(senderId, userEmail);
-        if (response.getValue() == null ){
-            throw new NotAuthorizedException();
-        }
+    public void sendImageToUserById(long recipientId, long senderId, MultipartFile image) throws IOException {
+
         Conversation ownerConversation = conversationRepository.findByOwnerIdAndRecipientId(senderId, recipientId)
                 .orElseGet(()-> conversationCreator.createConversation(senderId, recipientId));
         Conversation recipientConversation = conversationRepository.findByOwnerIdAndRecipientId(recipientId, senderId)
@@ -135,11 +128,7 @@ public class MessageService {
     }
 
 
-    public void deleteMessageFromConversationForUser(long conversationId, long messageId, String userEmail, long ownerId) {
-        RestResponseDTO<Boolean> response = securityServiceClient.isUser(ownerId, userEmail);
-        if (response.getValue() == null ){
-            throw new NotAuthorizedException();
-        }
+    public void deleteMessageFromConversationForUser(long conversationId, long messageId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(NoSuchConversationFoundException::new);
         Message message = conversation.getMessages().stream()
@@ -150,11 +139,8 @@ public class MessageService {
         messageRepository.delete(message);
     }
     @Transactional
-    public void deleteMessageFromConversationForAll(String instanceId, String userEmail, long ownerId) {
-        RestResponseDTO<Boolean> response = securityServiceClient.isUser(ownerId, userEmail);
-        if (response.getValue() == null ){
-            throw new NotAuthorizedException();
-        }
+    public void deleteMessageFromConversationForAll(String instanceId, long ownerId) {
+
         Message message = messageRepository.findByInstanceIdAndOwner(instanceId, ownerId)
                 .orElseThrow(NoSuchMessageException::new);
         Message message2 = messageRepository.findByInstanceIdAndOwner(instanceId, message.getRecipient())

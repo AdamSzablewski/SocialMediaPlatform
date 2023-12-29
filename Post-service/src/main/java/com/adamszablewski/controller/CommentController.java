@@ -1,5 +1,7 @@
 package com.adamszablewski.controller;
 
+import com.adamszablewski.annotations.SecureContentResource;
+import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.classes.Comment;
 import com.adamszablewski.service.CommentService;
 import lombok.AllArgsConstructor;
@@ -26,25 +28,31 @@ public class CommentController {
         return new ResponseEntity<>(commentService.getCommentsForComment(commentId), HttpStatus.OK);
     }
     @PostMapping()
-    public ResponseEntity<String> postCommentsForPost(@RequestParam(name = "postId") long postId,
+    @SecureUserIdResource
+    public ResponseEntity<String> postCommentForPost(@RequestParam(name = "postId") long postId,
+                                                      @RequestParam(name = "userId") long userId,
                                                       @RequestBody Comment comment){
         commentService.postCommentForPost(postId, comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/comment")
+    @SecureUserIdResource
     public ResponseEntity<String> postCommentsForComment(@RequestParam(name = "commentId") long commentId,
+                                                         @RequestParam(name = "userId") long userId,
                                                          @RequestBody Comment comment){
         commentService.postCommentForComment(commentId, comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping()
+    @SecureContentResource
     public ResponseEntity<String> deleteCommentsForPost(@RequestParam(name = "postId") long postId,
                                                       @RequestParam(name = "commentId") long commentId){
         commentService.deleteCommentForPost(postId, commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @DeleteMapping("/delete")
+    @SecureContentResource
     public ResponseEntity<String> deleteComment(@RequestParam(name = "commentId") long commentId){
         commentService.deleteComment(commentId);
         return new ResponseEntity<>( HttpStatus.OK);

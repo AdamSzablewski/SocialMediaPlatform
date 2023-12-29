@@ -1,6 +1,6 @@
 package com.adamszablewski.controller;
 
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.FeedService;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,7 @@ public class FeedController {
     private final FeedService feedService;
 
     @GetMapping()
+    @SecureUserIdResource
     public ResponseEntity<List<PostDto>> getFeedForUser(@RequestParam("userId") long userId){
         return ResponseEntity.status(HttpStatus.OK).body(feedService.getFeedForUser(userId));
 

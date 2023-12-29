@@ -9,6 +9,7 @@ import com.adamszablewski.util.UserValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 //import static com.adamszablewski.util.Mapper.mapConversationToDTO;
@@ -21,11 +22,8 @@ public class ConversationService {
     private final Mapper mapper;
 
 
-    public Set<Conversation> getCoversationsForUser(long user, String userEmail) {
-        if(!userValidator.isUser(user, userEmail)){
-            throw new NotAuthorizedException();
-        }
-        return conversationRepository.findAllByOwnerId(user);
+    public List<Conversation> getCoversationsForUser(long userId) {
+        return conversationRepository.findAllByOwnerId(userId);
 
     }
 
