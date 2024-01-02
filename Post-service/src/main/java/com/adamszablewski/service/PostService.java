@@ -5,13 +5,13 @@ import com.adamszablewski.classes.Profile;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.feign.ImageServiceClient;
+import com.adamszablewski.feign.VideoServiceClient;
 import com.adamszablewski.rabbitMq.RabbitMqProducer;
 import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.repository.ProfileRepository;
 import com.adamszablewski.utils.Dao;
 import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +28,7 @@ public class PostService {
     private final ImageServiceClient imageServiceClient;
     private final ProfileRepository profileRepository;
     private final RabbitMqProducer rabbitMqProducer;
+    private final VideoServiceClient videoServiceClient;
     private final Mapper mapper;
     private final Dao dao;
     public PostDto getPostById(long postId) {
@@ -97,5 +98,41 @@ public class PostService {
         post.setDescription(postDto.getDescription());
         post.setVisible(true);
         postRepository.save(post);
+    }
+
+    public void publishVideoPost(String multimediaId, PostDto postDto) {
+        Post post = postRepository.findByMultimediaId(multimediaId)
+                .orElseThrow(NoSuchPostException::new);
+        post.setDescription(postDto.getDescription());
+        post.setVisible(true);
+        postRepository.save(post);
+    }
+
+    public String uploadVideoForPost(long userId, MultipartFile video) throws IOException {
+        String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video.getBytes(), video.getContentType(), userId);
+        Post newPost = Post.builder()
+                .userId(userId)
+                .likes(new HashSet<>())
+                .multimediaId(multimediaId)
+                .comments(new ArrayList<>())
+                .visible(false)
+                .build();
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseGet(()-> createProfile(userId));
+        if (profile.getPosts() == null){
+            profile.setPosts(new ArrayList<>());
+        }
+        try{
+            profile.getPosts().add(newPost);
+            postRepository.save(newPost);
+            profileRepository.save(profile);
+
+        }
+        catch (Exception e){
+            rabbitMqProducer.deleteImageByMultimediaId(multimediaId);
+            throw new RuntimeException();
+        }
+        return multimediaId;
+
     }
 }

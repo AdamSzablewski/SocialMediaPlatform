@@ -120,7 +120,7 @@ public class MessageServiceTest {
                 .isSystemConversation(false)
                 .build();
         Conversation conversation2 = Conversation.builder()
-                //.id(2L)
+                .id(2L)
                 .ownerId(2L)
                 .messages(new ArrayList<>())
                 .isSystemConversation(false)
@@ -133,14 +133,11 @@ public class MessageServiceTest {
                 .recipient(1L)
                 .build();
 
-        when(securityServiceClient.isUser(senderId, userEmail)).thenReturn(RestResponseDTO.<Boolean>builder()
-                .value(true)
-                .build());
         when(conversationRepository.findByOwnerIdAndRecipientId(senderId, recipientId)).thenReturn(Optional.of(conversation1));
         when(conversationRepository.findByOwnerIdAndRecipientId(recipientId, senderId)).thenReturn(Optional.of(conversation2));
         when(uniqueIdGenerator.generateUniqueId()).thenReturn("unique");
 
-        messageService.sendMessageToUserById(recipientId, senderId, userEmail, originalMessage);
+        messageService.sendMessageToUserById(recipientId, senderId, originalMessage);
 
         assertThat(conversation1.getMessages().get(0).getInstanceId()).isEqualTo(instanceId);
         assertThat(conversation2.getMessages().get(0).getInstanceId()).isEqualTo(instanceId);
@@ -172,9 +169,6 @@ public class MessageServiceTest {
                 .recipient(1L)
                 .build();
 
-        when(securityServiceClient.isUser(senderId, userEmail)).thenReturn(RestResponseDTO.<Boolean>builder()
-                .value(true)
-                .build());
         when(conversationRepository.findByOwnerIdAndRecipientId(senderId, recipientId)).thenReturn(Optional.empty());
         when(conversationRepository.findByOwnerIdAndRecipientId(recipientId, senderId)).thenReturn(Optional.empty());
         when(conversationCreator.createConversation(senderId, recipientId)).thenReturn(conversation1);
@@ -182,7 +176,7 @@ public class MessageServiceTest {
 
         when(uniqueIdGenerator.generateUniqueId()).thenReturn("unique");
 
-        messageService.sendMessageToUserById(recipientId, senderId, userEmail, originalMessage);
+        messageService.sendMessageToUserById(recipientId, senderId, originalMessage);
 
         assertThat(conversation1.getMessages().get(0).getInstanceId()).isEqualTo(instanceId);
         assertThat(conversation2.getMessages().get(0).getInstanceId()).isEqualTo(instanceId);
@@ -212,9 +206,6 @@ public class MessageServiceTest {
                 .recipient(1L)
                 .build();
 
-        when(securityServiceClient.isUser(senderId, userEmail)).thenReturn(RestResponseDTO.<Boolean>builder()
-                .value(true)
-                .build());
         when(conversationRepository.findByOwnerIdAndRecipientId(senderId, recipientId)).thenReturn(Optional.empty());
         when(conversationRepository.findByOwnerIdAndRecipientId(recipientId, senderId)).thenReturn(Optional.empty());
         when(conversationCreator.createConversation(senderId, recipientId)).thenReturn(conversation1);
@@ -222,7 +213,7 @@ public class MessageServiceTest {
 
         when(uniqueIdGenerator.generateUniqueId()).thenReturn("unique");
 
-        messageService.sendMessageToUserById(recipientId, senderId, userEmail, originalMessage);
+        messageService.sendMessageToUserById(recipientId, senderId, originalMessage);
 
     }
 }

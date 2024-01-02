@@ -2,16 +2,13 @@ package com.adamszablewski.service;
 
 import com.adamszablewski.dto.FriendRequest;
 import com.adamszablewski.dto.MessageDto;
-import com.adamszablewski.dto.RestResponseDTO;
 import com.adamszablewski.exceptions.NoSuchConversationFoundException;
 import com.adamszablewski.exceptions.NoSuchMessageException;
-import com.adamszablewski.exceptions.NotAuthorizedException;
 import com.adamszablewski.feign.ImageServiceClient;
 import com.adamszablewski.feign.SecurityServiceClient;
 import com.adamszablewski.feign.UserServiceClient;
 import com.adamszablewski.model.Conversation;
 import com.adamszablewski.model.Message;
-import com.adamszablewski.model.MessageDTO;
 import com.adamszablewski.repository.ConversationRepository;
 import com.adamszablewski.repository.MessageRepository;
 import com.adamszablewski.util.ConversationCreator;

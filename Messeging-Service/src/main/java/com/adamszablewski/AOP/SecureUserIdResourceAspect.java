@@ -2,7 +2,6 @@ package com.adamszablewski.AOP;
 
 
 import com.adamszablewski.util.security.SecurityUtil;
-import com.adamszablewski.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.AllArgsConstructor;

@@ -22,6 +22,9 @@ public class GatewayConfig {
                 .route("security-service", r -> r
                         .path("/security/**")
                         .uri("lb://SECURITY-SERVICE"))
+                .route("video-service", r -> r
+                        .path("/video/**")
+                        .uri("lb://VIDEO-SERVICE"))
                 .route("image-service", r -> r
                         .path("/images/**")
                         .uri("lb://IMAGE-SERVICE"))

@@ -54,6 +54,15 @@ public class PostController {
         String multimediaId = postService.postImagePost(userId, image);
         return ResponseEntity.ok(multimediaId);
     }
+    @PostMapping("/video/upload")
+    //@SecureContentResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> uploadVideoForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
+                                                     @RequestParam MultipartFile video) throws IOException {
+        String multimediaId = postService.uploadVideoForPost(userId, video);
+        return ResponseEntity.ok(multimediaId);
+    }
     @PostMapping("/image")
     @SecureContentResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
@@ -62,6 +71,16 @@ public class PostController {
                                                    @RequestParam(name = "multimediaId") String multimediaId,
                                                    @RequestBody PostDto postDto ) {
         postService.publishImagePost(multimediaId, postDto);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/video")
+    @SecureContentResource
+    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "postServiceRateLimiter")
+    public ResponseEntity<String> publishVideoPost(HttpServletRequest servletRequest,
+                                                   @RequestParam(name = "multimediaId") String multimediaId,
+                                                   @RequestBody PostDto postDto ) {
+        postService.publishVideoPost(multimediaId, postDto);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/delete")

@@ -22,7 +22,7 @@ import java.io.IOException;
 public class MessageController {
     MessageService messageService;
 
-    @PostMapping("/user/{recipientId}}")
+    @PostMapping("/user/{recipientId}")
     @SecureUserIdResource
     public ResponseEntity<RestResponseDTO<MessageDTO>> sendMessageToUserById(@PathVariable long recipientId,
                                                                              @RequestParam("userId") long userId,
@@ -43,10 +43,10 @@ public class MessageController {
     @DeleteMapping("/{conversationId}/message/{messageId}/user/{ownerId}")
     @SecureContentResource
     public ResponseEntity<String> deleteMessageFromConversationForUser(@RequestParam("conversationId") long conversationId,
-                                                                                            @RequestParam("messageId") long messageId,
-                                                                                            @RequestParam("userId") long ownerId,
-                                                                                            HttpServletRequest httpServletRequest{
-        messageService.deleteMessageFromConversationForUser(conversationId, messageId, ownerId);
+                                                                       @RequestParam("messageId") long messageId,
+                                                                       @RequestParam("userId") long ownerId,
+                                                                       HttpServletRequest httpServletRequest){
+        messageService.deleteMessageFromConversationForUser(conversationId, messageId);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/message/instance")
