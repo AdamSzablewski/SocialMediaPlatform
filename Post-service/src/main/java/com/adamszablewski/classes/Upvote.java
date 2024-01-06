@@ -1,5 +1,4 @@
 package com.adamszablewski.classes;
-
 import jakarta.persistence.*;
 import lombok.*;
 

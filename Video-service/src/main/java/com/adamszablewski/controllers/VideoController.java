@@ -45,4 +45,10 @@ public class VideoController {
         String multimediaId = videoService.uploadVideo(videoData, contentType, userId);
         return ResponseEntity.ok(multimediaId);
     }
+    @PostMapping("/upload/file")
+    public ResponseEntity<String> uploadVideoFIle(@RequestParam("video") MultipartFile video, long userId) throws IOException {
+        String multimediaId = videoService.uploadVideo(video, userId);
+        return ResponseEntity.ok(multimediaId);
+    }
+
 }

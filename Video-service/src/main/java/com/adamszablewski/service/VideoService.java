@@ -48,6 +48,18 @@ public class VideoService {
         saveVideo(video);
 
     }
+    public String uploadVideo(MultipartFile file, long userId) throws IOException {
+        String multimediaId = uniqueIdGenerator.generateUniqueId();
+        Video video = new Video();
+        video.setContentType(file.getContentType());
+        video.setMultimediaId(multimediaId);
+        //video.setVideoData(compressVideo(file.getBytes()));
+        video.setVideoData(file.getBytes());
+
+        saveVideo(video);
+        return multimediaId;
+
+    }
     public String uploadVideo(byte[] videoData, String contentType, long userId) {
         String multimediaId = uniqueIdGenerator.generateUniqueId();
         Video video = Video.builder()

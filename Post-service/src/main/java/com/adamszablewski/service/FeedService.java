@@ -32,7 +32,7 @@ public class FeedService {
                         .build();
 
         updateFeed(feed);
-        return mapper.mapPostToDto(feed.getPosts());
+        return Mapper.mapPostToDto(feed.getPosts());
 
     }
 

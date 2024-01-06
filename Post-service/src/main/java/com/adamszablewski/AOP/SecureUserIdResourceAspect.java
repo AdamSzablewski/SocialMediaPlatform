@@ -1,9 +1,10 @@
 package com.adamszablewski.AOP;
 
 
+//import com.adamszablewski.utils.security.SecurityUtil;
+import com.adamszablewski.exceptions.NotAuthorizedException;
 import com.adamszablewski.utils.security.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.NotAuthorizedException;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,6 +21,7 @@ public class SecureUserIdResourceAspect {
 
     @Before("@annotation(com.adamszablewski.annotations.SecureUserIdResource)")
     public void processSecureuserIdResource(JoinPoint joinPoint) {
+
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
             if (arg instanceof HttpServletRequest request) {
@@ -34,7 +36,7 @@ public class SecureUserIdResourceAspect {
                 }
 
                 if (!validated){
-                    throw new NotAuthorizedException("Validation failed");
+                    throw new NotAuthorizedException();
                 }
             }
         }

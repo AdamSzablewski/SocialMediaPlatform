@@ -4,6 +4,7 @@ import com.adamszablewski.annotations.SecureContentResource;
 import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.classes.Comment;
 import com.adamszablewski.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class CommentController {
 
     @GetMapping()
     public ResponseEntity<List<Comment>> getCommentsForPost(@RequestParam(name = "postId") long postId){
-       return new ResponseEntity<>(commentService.getCommentsForPost(postId), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.getCommentsForPost(postId), HttpStatus.OK);
     }
     @GetMapping("/answers")
     public ResponseEntity<List<Comment>> getCommentsForComment(@RequestParam(name = "commentId") long commentId){
@@ -30,32 +31,37 @@ public class CommentController {
     @PostMapping()
     @SecureUserIdResource
     public ResponseEntity<String> postCommentForPost(@RequestParam(name = "postId") long postId,
-                                                      @RequestParam(name = "userId") long userId,
-                                                      @RequestBody Comment comment){
+                                                     @RequestParam(name = "userId") long userId,
+                                                     @RequestBody Comment comment,
+                                                     HttpServletRequest servletRequest){
         commentService.postCommentForPost(postId, comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/comment")
     @SecureUserIdResource
-    public ResponseEntity<String> postCommentsForComment(@RequestParam(name = "commentId") long commentId,
+    public ResponseEntity<String> postCommentForComment(@RequestParam(name = "commentId") long commentId,
                                                          @RequestParam(name = "userId") long userId,
-                                                         @RequestBody Comment comment){
-        commentService.postCommentForComment(commentId, comment);
+                                                         @RequestBody Comment comment,
+                                                        HttpServletRequest servletRequest){
+        commentService.postCommentForComment(commentId, comment, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping()
-    @SecureContentResource
-    public ResponseEntity<String> deleteCommentsForPost(@RequestParam(name = "postId") long postId,
-                                                      @RequestParam(name = "commentId") long commentId){
+    @SecureContentResource(value = "commentId")
+    public ResponseEntity<String> deleteCommentForPost(@RequestParam(name = "postId") long postId,
+                                                        @RequestParam(name = "commentId") long commentId,
+                                                       HttpServletRequest servletRequest){
         commentService.deleteCommentForPost(postId, commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @DeleteMapping("/delete")
-    @SecureContentResource
-    public ResponseEntity<String> deleteComment(@RequestParam(name = "commentId") long commentId){
-        commentService.deleteComment(commentId);
-        return new ResponseEntity<>( HttpStatus.OK);
+    @SecureContentResource(value = "commentId")
+    public ResponseEntity<String> deleteComment(@RequestParam(name = "parentId") long parentId,
+                                                @RequestParam(name = "commentId") long commentId,
+                                                HttpServletRequest servletRequest){
+        commentService.deleteCommentForComment(parentId, commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

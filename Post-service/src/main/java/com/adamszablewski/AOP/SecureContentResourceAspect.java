@@ -1,6 +1,7 @@
 package com.adamszablewski.AOP;
 
 
+import com.adamszablewski.annotations.SecureContentResource;
 import com.adamszablewski.exceptions.MissingResourceHeaderException;
 import com.adamszablewski.exceptions.SecurityException;
 import com.adamszablewski.interfaces.UserResource;
@@ -21,11 +22,13 @@ public class SecureContentResourceAspect {
 
     private final SecurityUtil securityUtil;
 
-    @Before("@annotation(com.adamszablewski.annotations.SecureContentResource)")
-    public void processSecureContentResource(JoinPoint joinPoint) {
+    @Before("@annotation(secureContentResource) && args(.., request)")
+    public void processSecureContentResource(JoinPoint joinPoint, SecureContentResource secureContentResource, HttpServletRequest request) {
+        // Extracting the value parameter from the annotation
+
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
-            if (arg instanceof HttpServletRequest request) {
+            if (arg instanceof HttpServletRequest) {
                 String token = request.getHeader("token");
                 String postId = request.getParameter("postId");
                 String upvoteId =request.getParameter("upvoteId");
@@ -33,30 +36,32 @@ public class SecureContentResourceAspect {
                 String multimediaId = request.getParameter("multimediaId");
 
                 boolean validated;
-                if (postId == null && upvoteId == null && commentId == null && multimediaId == null){
-                    throw new MissingResourceHeaderException();
-                }
+
                 if (token == null){
                     throw new RuntimeException("Missing token exception");
                 }
-                if (postId != null && postId.length() > 0){
-                    validated = securityUtil.ownsPost(Long.parseLong(postId), token);
+
+                switch (secureContentResource.value()){
+                    case "commentId" -> {
+                        assert commentId != null;
+                        validated = securityUtil.ownsComment(Long.parseLong(commentId), token);
+                    }
+                    case "postId" -> {
+                        assert postId != null;
+                        validated = securityUtil.ownsPost(Long.parseLong(postId), token);
+                    }
+                    case "upvoteId" -> {
+                        assert upvoteId != null;
+                        validated = securityUtil.ownsUpvote(Long.parseLong(upvoteId), token);
+                    }
+                    case "multimediaId" -> {
+                        assert commentId != null;
+                        validated = securityUtil.ownsMultimedia(Long.parseLong(multimediaId), token);
+                    }
+                    default -> throw new NotAuthorizedException("Validation failed");
+
                 }
-                else if (upvoteId != null && upvoteId.length() > 0) {
-                    validated = securityUtil.ownsUpvote(Long.parseLong(upvoteId), token);
-                }
-                else if (commentId != null && commentId.length() > 0) {
-                    validated = securityUtil.ownsComment(Long.parseLong(commentId), token);
-                }
-                else if (multimediaId != null && multimediaId.length() > 0) {
-                    validated = securityUtil.ownsMultimedia(Long.parseLong(multimediaId), token);
-                }
-                else{
-                    throw new SecurityException();
-                }
-                if (!validated){
-                    throw new NotAuthorizedException("Validation failed");
-                }
+
             }
         }
     }

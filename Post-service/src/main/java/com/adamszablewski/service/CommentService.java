@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +45,16 @@ public class CommentService {
         dao.deleteComment(commentToRemove);
     }
     @Transactional
-    public void deleteComment(long commentId) {
-        Comment comment = commentRepository.findById(commentId)
+    public void deleteCommentForComment (long parentCommentId, long commentId) {
+        Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(NoSuchCommentException::new);
-
-        List<Comment> comments = comment.getAnswers();
-        comments.add(comment);
-        dao.deleteComment(comments);
+        Comment commentToRemove = parentComment.getComments().stream()
+                .filter(comment -> comment.getId() == commentId)
+                .findFirst()
+                .orElseThrow(NoSuchCommentException::new);
+        parentComment.getAnswers().remove(commentToRemove);
+        System.out.println(commentToRemove);
+        dao.deleteComment(commentToRemove);
     }
     @Transactional
     public void postCommentForPost(long postId, Comment commentData) {
@@ -59,22 +63,24 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .text(commentData.getText())
                 .userId(commentData.getUserId())
+                .dateTime(LocalDateTime.now())
                 .build();
         post.getComments().add(comment);
         commentRepository.save(comment);
         postRepository.save(post);
     }
     @Transactional
-    public void postCommentForComment(long commentId, Comment commentData) {
+    public void postCommentForComment(long commentId, Comment commentData, long userId) {
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(NoSuchCommentException::new);
         Comment comment = Comment.builder()
                 .text(commentData.getText())
-                .userId(commentData.getUserId())
+                .userId(userId)
+                .dateTime(LocalDateTime.now())
                 .build();
 
         if (comment.getAnswers() == null){
-             parent.setAnswers(new ArrayList<>());
+            parent.setAnswers(new ArrayList<>());
         }
         parent.getAnswers().add(comment);
         commentRepository.save(comment);

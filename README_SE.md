@@ -1,71 +1,52 @@
-# Bokningsapplikation baserad på mikrotjänster
-
+# Sociala medieapplikation
 - [English](README.md)
-## Översikt
+- [Polski](README_PL.md)
 
-Bokningsapplikationen är ett exempel på mitt arbete inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den möjliggör för företag att erbjuda sina tjänster och för kunder att enkelt boka dessa tjänster. Denna applikation innehåller även funktioner för att ladda upp portföljbilder för tjänster och för användare att kommunicera genom meddelanden.
+## Översikt
+Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild- eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner.
 
 ## Nyckelfunktioner
+- **Inläggskreation:** Användare kan skapa och dela video, bild eller textbaserade inlägg med sitt nätverk.
+- **Videostreaming:** Videoinlägg kan streamas av användare.
+- **Kommentering och svar:** Användare kan delta i konversationer genom att kommentera inlägg eller svara på andra kommentarer.
+- **Gilla-system:** Applikationen inkluderar ett gilla-system för både inlägg och kommentarer, vilket påverkar innehållets popularitet.
+- **Vänhantering:** Användare kan ansluta sig till andra genom att skicka och acceptera vänförfrågningar, vilket utvidgar deras sociala nätverk.
+- **Meddelandefunktionalitet:** Realtidsmeddelandefunktionalitet gör att användare kan kommunicera med varandra genom text- och bildmeddelanden.
+- **Popularitetsmätare:** Populariteten för inlägg och kommentarer bestäms av antalet gillanden och kommentarer, vilket påverkar deras synlighet.
+- **Användarregistrering och autentisering:** Användarregistrering och autentisering med JWT (JSON Web Tokens) för säker användarautentisering.
+- **Enhetsprovning med JUnit och Mockito:** Varje mikrotjänst genomgår omfattande enhetsprovning med JUnit och Mockito för att säkerställa funktionalitet och identifiera och åtgärda potentiella problem.
 
-- **Användarregistrering och autentisering**: Säker användarregistrering och autentisering för att skydda användardata och reglera åtkomst. Applikationen använder JWT (JSON Web Tokens) för autentisering.
-
-- **Publicering av tjänster och portföljbilder**: Tjänsteleverantörer kan enkelt publicera sina tjänster och förbättra sin portfölj genom att lägga till bilder för varje tjänst.
-
-- **Bokning**: Användare kan smidigt bläddra bland tillgängliga tjänster, söka efter specifika tjänster och boka sina favoriter.
-
-- **Tidsschemaöversikt**: Användare kan enkelt kontrollera lediga tider för specifika tjänster på valfri dag. De kan även filtrera för att se vilka tider som är tillgängliga för olika anställda.
-
-- **Meddelandehantering med RabbitMQ**: Applikationen använder RabbitMQ för effektiv meddelandehantering mellan mikrotjänster.
-
-- **Händelsestyrd arkitektur**: Applikationen använder RabbitMQ för händelsestyrd arkitektur, vilket möjliggör effektiv hantering av data mellan tjänsterna.
-
-- **Meddelandefunktion**: Användare kan skicka text- och bildmeddelanden till varandra.
-
-- **Enhetstestning med JUnit och Mockito**: Varje mikrotjänst är noggrant testad med JUnit och Mockito för att säkerställa korrekt funktionalitet och för att upptäcka och åtgärda potentiella fel.
-
-## Teknologier som används
-
-- **Java**: Det primära programmeringsspråket.
-
-- **Spring Framework**: Projektet utnyttjar Spring-ekosystemet, inklusive Spring Cloud och Spring Data JPA för att bygga skalbara mikrotjänster.
-
-- **Mikrotjänstarkitektur**: Applikationen använder mikrotjänstarkitektur effektivt för att bryta ner komplexa funktioner i hanterbara komponenter och för att säkerställa skalbarhet.
-
-- **JUnit och Mockito**: Enhetstestning utförs med hjälp av JUnit och Mockito för att säkerställa att mikrotjänsterna fungerar korrekt och att potentiella fel upptäcks och åtgärdas.
-
-- **PostgreSQL**: Datahantering, inklusive hantering av bilder, uppnås med hjälp av PostgreSQL som databashanteringssystem.
-
-- **RabbitMQ**: Meddelandetjänster underlättas av RabbitMQ och stödjer realtidskommunikation mellan mikrotjänster samt möjliggör händelsestyrd datahantering.
-
-- **Resilience4J**: Applikationen använder Resilience4J som en kretsbrytare för att säkerställa robusthet och felhantering i kommunikationen mellan mikrotjänsterna.
+## Använda teknologier
+- **Java:** Det primära programmeringsspråket.
+- **Spring-ramverket:** Utvecklar ekosystemet Spring, inklusive Spring Boot, Spring Data JPA och Spring Security, för att bygga skalbara mikrotjänster.
+- **Mikrotjänstarkitektur:** Använder mikrotjänstarkitektur för modulär och skalbar utveckling, vilket möjliggör effektiv hantering av komplexa funktioner.
+- **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade anmärkningar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för begränsad data.
+- **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
+- **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.
+- **RabbitMQ:** Underlättar kommunikationen mellan mikrotjänster, särskilt för hantering av händelser och meddelanden.
+- **Resilience4J:** Säkerställer motståndskraft och robusthet i kommunikationen mellan mikrotjänster genom att inkludera Resilience4J som en brytare.
 
 ## Mikrotjänster
 
+### Video-Service
+- Videostreaming.
+- Lagrar videor.
+- Säkrar användarresurser.
+
 ### Api Gateway
-- Ansvarig för routing och vägledning.
+- Ansvarig för ruttning och vägledning till olika mikrotjänster.
+- Validerar inkommande förfrågningar genom Security-Service.
 
 ### Security-Service
-- Hanterar autentisering och auktorisering för inkommande förfrågningar.
-- Svarar med en JWT vid inloggning för senare autentisering och auktorisering.
-- Utför JWT-verifikation.
-- Använder SHA-256 för att kryptera lösenord.
-
-- **Enhetstestning med JUnit och Mockito**: Autentisering och auktorisering är noggrant testade med JUnit och Mockito för att säkerställa säkerhet och tillförlitlighet.
+- Hanterar autentisering och auktorisation, utfärdar JWT för säker kommunikation.
 
 ### User-Service
-- Hanterar all användardata, inklusive kontaktinformation, namn och lösenord.
-- Använder "Event Driven Architecture" med hjälp av RabbitMQ för att meddela andra tjänster om händelser såsom radering av användare och därmed ta bort all associerad data från andra databaser som används av de andra tjänsterna
-### Booking-Service
-- Returnerar tillgängliga tider för tjänster och genererar Timeslot-objekt för de anställda som är tillgängliga under en viss dag för att utföra tjänsten.
-- Returnerar företag/tjänster baserat på namn och popularitet i deras tjänstkategori.
-- Skickar meddelanden med information om bokningar genom RabbitMQ.
+- Hanterar användardata, används för lagring och bearbetning av personlig information för användare.
+- Säkrar användarresurser.
 
-### Image-Service
-- Komprimerar bilder och lagrar dem i PostgreSQL-databasen.
-- Vid hämtning av bilder från databasen dekomprimeras de.
-- Sparar bilder för meddelanden och portföljbilder och svarar med unika bild-ID:n till andra tjänster för senare hämtning.
+### Post-Service
+- Hanterar skapande, gillande och kommentering av inlägg.
+- Ansvarig för skapande av flöden baserade på popularitetsmätare för inlägg.
+- Säkrar användarresurser.
 
-### Messaging-Service
-- Möjliggör användare att skicka meddelanden, inklusive text och bilder, till varandra.
-- Möjliggör användare att radera meddelanden hos sig själv eller för alla i konversationen
-- Hanterar systemmeddelanden om kommande bok
+###

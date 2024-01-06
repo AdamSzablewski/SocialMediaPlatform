@@ -31,11 +31,11 @@ public class PostService {
     private final VideoServiceClient videoServiceClient;
     private final Mapper mapper;
     private final Dao dao;
-    public PostDto getPostById(long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(NoSuchPostException::new);
-        return mapper.mapPostToDto(post);
-    }
+//    public PostDto getPostById(long postId) {
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(NoSuchPostException::new);
+//        return mapper.mapPostToDto(post);
+//    }
 
     public void deletePostById(long postId) {
         dao.deletePost(postId);
@@ -92,15 +92,7 @@ public class PostService {
         profileRepository.save(newProfile);
         return newProfile;
     }
-    public void publishImagePost(String multimediaId, PostDto postDto) {
-        Post post = postRepository.findByMultimediaId(multimediaId)
-                .orElseThrow(NoSuchPostException::new);
-        post.setDescription(postDto.getDescription());
-        post.setVisible(true);
-        postRepository.save(post);
-    }
-
-    public void publishVideoPost(String multimediaId, PostDto postDto) {
+    public void publishPost(String multimediaId, PostDto postDto) {
         Post post = postRepository.findByMultimediaId(multimediaId)
                 .orElseThrow(NoSuchPostException::new);
         post.setDescription(postDto.getDescription());
@@ -109,7 +101,9 @@ public class PostService {
     }
 
     public String uploadVideoForPost(long userId, MultipartFile video) throws IOException {
-        String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video.getBytes(), video.getContentType(), userId);
+       // String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video.getBytes(), video.getContentType(), userId);
+        String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video, userId);
+
         Post newPost = Post.builder()
                 .userId(userId)
                 .likes(new HashSet<>())

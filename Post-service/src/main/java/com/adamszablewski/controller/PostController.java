@@ -1,6 +1,7 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.annotations.SecureContentResource;
+import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.PostService;
 import com.adamszablewski.utils.ExceptionHandler;
@@ -24,12 +25,12 @@ public class PostController {
     private final PostService postService;
     private final ExceptionHandler exceptionHandler;
 
-    @GetMapping()
-    public ResponseEntity<PostDto> getPostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
-       return new ResponseEntity<>(postService.getPostById(postId), HttpStatus.OK);
-    }
+//    @GetMapping()
+//    public ResponseEntity<PostDto> getPostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
+//       return new ResponseEntity<>(postService.getPostById(postId), HttpStatus.OK);
+//    }
     @DeleteMapping()
-    @SecureContentResource
+    @SecureContentResource(value = "postId")
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> deletePostById(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){
@@ -37,7 +38,7 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping()
-    @SecureContentResource
+    @SecureUserIdResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> postPost(HttpServletRequest servletRequest, @RequestBody PostDto post,
@@ -46,7 +47,7 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/image/upload")
-    @SecureContentResource
+    @SecureUserIdResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> uploadImageForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
@@ -55,7 +56,7 @@ public class PostController {
         return ResponseEntity.ok(multimediaId);
     }
     @PostMapping("/video/upload")
-    //@SecureContentResource
+    @SecureContentResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> uploadVideoForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
@@ -63,28 +64,28 @@ public class PostController {
         String multimediaId = postService.uploadVideoForPost(userId, video);
         return ResponseEntity.ok(multimediaId);
     }
-    @PostMapping("/image")
+    @PutMapping("/image")
     @SecureContentResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> publishImagePost(HttpServletRequest servletRequest,
                                                    @RequestParam(name = "multimediaId") String multimediaId,
                                                    @RequestBody PostDto postDto ) {
-        postService.publishImagePost(multimediaId, postDto);
+        postService.publishPost(multimediaId, postDto);
         return ResponseEntity.ok().build();
     }
-    @PostMapping("/video")
-    @SecureContentResource
+    @PutMapping("/video")
+    @SecureContentResource(value = "multimediaId")
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> publishVideoPost(HttpServletRequest servletRequest,
                                                    @RequestParam(name = "multimediaId") String multimediaId,
                                                    @RequestBody PostDto postDto ) {
-        postService.publishVideoPost(multimediaId, postDto);
+        postService.publishPost(multimediaId, postDto);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/delete")
-    @SecureContentResource
+    @SecureContentResource(value = "postId")
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public ResponseEntity<String> deletePost(HttpServletRequest servletRequest, @RequestParam(name = "postId") long postId){

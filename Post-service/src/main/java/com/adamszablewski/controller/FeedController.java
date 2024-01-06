@@ -3,6 +3,7 @@ package com.adamszablewski.controller;
 import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.service.FeedService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class FeedController {
 
     @GetMapping()
     @SecureUserIdResource
-    public ResponseEntity<List<PostDto>> getFeedForUser(@RequestParam("userId") long userId){
+    public ResponseEntity<List<PostDto>> getFeedForUser(@RequestParam("userId") long userId,
+                                                        HttpServletRequest servletRequest){
         return ResponseEntity.status(HttpStatus.OK).body(feedService.getFeedForUser(userId));
 
     }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,14 +25,12 @@ public class Post implements Commentable, Likeable {
     private String text;
     private boolean visible;
     private String multimediaId;
-//    @ManyToMany(mappedBy = "posts")
- //   List<Feed> feeds;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Upvote> likes;
     private String description;
     private LocalDateTime dateTime;
     @OneToMany
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
     @Override
     public String toString() {
         return "Post{" +

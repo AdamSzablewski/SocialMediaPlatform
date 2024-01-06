@@ -1,5 +1,4 @@
 package com.adamszablewski.classes;
-
 import com.adamszablewski.interfaces.Likeable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ public class Comment implements Commentable, Likeable {
     private LocalDateTime dateTime;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Upvote> likes = new HashSet<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Comment> answers;
 
 

@@ -52,6 +52,8 @@ public class SecurityUtil {
 
     public boolean isUser(long userId, String token) {
         long userIdFromToken = securityServiceClient.extractUserIdFromToken(token);
+        System.out.println("userId from toke ||||  "+userIdFromToken);
+        System.out.println("user id "+userId);
         return userId == userIdFromToken;
     }
 }

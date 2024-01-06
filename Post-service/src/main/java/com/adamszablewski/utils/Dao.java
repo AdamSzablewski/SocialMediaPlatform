@@ -20,6 +20,7 @@ public class Dao {
     private final PostRepository postRepository;
     private final ProfileRepository profileRepository;
     public void deleteComment(Comment comment){
+
         commentRepository.delete(comment);
     }
     public void deleteComment(List<Comment> comments){
@@ -27,10 +28,10 @@ public class Dao {
     }
 
     public void deletePost(long postId) {
-        Post post = postRepository.findById(postId)
-                        .orElseThrow(NoSuchPostException::new);
-        removePostFromProfile(post);
-        postRepository.deleteById(postId);
+//        Post post = postRepository.findById(postId)
+//                        .orElseThrow(NoSuchPostException::new);
+//        removePostFromProfile(post);
+//        postRepository.deleteById(postId);
     }
     private void removePostFromProfile(Post post){
         Profile profile = profileRepository.findByUserId(post.getUserId())
