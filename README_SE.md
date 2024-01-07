@@ -6,7 +6,7 @@
 Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild- eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner.
 
 ## Nyckelfunktioner
-- **Inläggskreation:** Användare kan skapa och dela video, bild eller textbaserade inlägg med sitt nätverk.
+- **Inlägg:** Användare kan skapa och dela video, bild eller textbaserade inlägg med sitt nätverk.
 - **Videostreaming:** Videoinlägg kan streamas av användare.
 - **Kommentering och svar:** Användare kan delta i konversationer genom att kommentera inlägg eller svara på andra kommentarer.
 - **Gilla-system:** Applikationen inkluderar ett gilla-system för både inlägg och kommentarer, vilket påverkar innehållets popularitet.
@@ -18,9 +18,9 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
-- **Spring-ramverket:** Utvecklar ekosystemet Spring, inklusive Spring Boot, Spring Data JPA och Spring Security, för att bygga skalbara mikrotjänster.
+- **Spring-ramverket:** Utvecklat med Spring ramvärket för att bygga skalbara mikrotjänster.
 - **Mikrotjänstarkitektur:** Använder mikrotjänstarkitektur för modulär och skalbar utveckling, vilket möjliggör effektiv hantering av komplexa funktioner.
-- **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade anmärkningar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för begränsad data.
+- **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade annoteringar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för att begränsad tillstånd där det behövs.
 - **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
 - **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.
 - **RabbitMQ:** Underlättar kommunikationen mellan mikrotjänster, särskilt för hantering av händelser och meddelanden.
@@ -29,7 +29,7 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 ## Mikrotjänster
 
 ### Video-Service
-- Videostreaming.
+- Video streaming.
 - Lagrar videor.
 - Säkrar användarresurser.
 
@@ -49,4 +49,17 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 - Ansvarig för skapande av flöden baserade på popularitetsmätare för inlägg.
 - Säkrar användarresurser.
 
-###
+
+### Image-Service
+- Komprimerar bilder och lagrar dem i PostgreSQL-databasen.
+- Vid hämtning av bilder från databasen dekomprimeras de.
+- Sparar bilder för meddelanden och portföljbilder och svarar med unika bild-ID:n till andra tjänster för senare hämtning.
+
+### Messaging-Service
+- Möjliggör användare att skicka meddelanden, inklusive text och bilder, till varandra.
+- Möjliggör användare att radera meddelanden hos sig själv eller för alla i konversationen
+- Hanterar systemmeddelanden om kommande bok
+
+### Friend-Service
+- Tar hand om vänförfrågningar med mera. 
+
