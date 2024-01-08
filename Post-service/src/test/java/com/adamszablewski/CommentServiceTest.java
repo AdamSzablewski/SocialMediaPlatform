@@ -96,18 +96,19 @@ public class CommentServiceTest {
     @Test
     void postCommentForCommentTest_should_post_comment_for_comment() {
         long parentCommentId = 1L;
+        long userId = 2L;
         Comment parentComment = Comment.builder()
                 .id(parentCommentId)
                 .text("Parent Comment")
                 .userId(1L).build();
         Comment commentData = Comment.builder()
                 .text("Reply Comment")
-                .userId(2L)
+                .userId(userId)
                 .build();
 
         when(commentRepository.findById(parentCommentId)).thenReturn(Optional.of(parentComment));
 
-        commentService.postCommentForComment(parentCommentId, commentData);
+        commentService.postCommentForComment(parentCommentId, commentData, userId);
 
         assertThat(parentComment.getAnswers()).hasSize(1);
         Comment postedComment = parentComment.getAnswers().get(0);

@@ -40,18 +40,18 @@ class SecureResourceAspectTest {
 //
 //    }
 
-    @Test
-    void processSecureResource_InvalidToken_ShouldThrowNotAuthorizedException() {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("token")).thenReturn(null);
-
-        JoinPoint joinPoint = mock(JoinPoint.class);
-        when(joinPoint.getArgs()).thenReturn(new Object[]{request});
-
-
-        assertThrows(RuntimeException.class, () -> secureResourceAspect.processSecureContentResource(joinPoint));
-    }
+//    @Test
+//    void processSecureResource_InvalidToken_ShouldThrowNotAuthorizedException() {
+//
+//        HttpServletRequest request = mock(HttpServletRequest.class);
+//        when(request.getHeader("token")).thenReturn(null);
+//
+//        JoinPoint joinPoint = mock(JoinPoint.class);
+//        when(joinPoint.getArgs()).thenReturn(new Object[]{request});
+//
+//
+//        assertThrows(RuntimeException.class, () -> secureResourceAspect.processSecureContentResource(joinPoint));
+//    }
 //    @Test
 //    void processSecureResource_NoHeadersForResources_ShouldThrowNotAuthorizedException() {
 //

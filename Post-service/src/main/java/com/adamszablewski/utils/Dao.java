@@ -28,10 +28,10 @@ public class Dao {
     }
 
     public void deletePost(long postId) {
-//        Post post = postRepository.findById(postId)
-//                        .orElseThrow(NoSuchPostException::new);
-//        removePostFromProfile(post);
-//        postRepository.deleteById(postId);
+        Post post = postRepository.findById(postId)
+                        .orElseThrow(NoSuchPostException::new);
+        removePostFromProfile(post);
+        postRepository.deleteById(postId);
     }
     private void removePostFromProfile(Post post){
         Profile profile = profileRepository.findByUserId(post.getUserId())

@@ -1,8 +1,8 @@
-//package adamszablewski;
+//package com.adamszablewski;
 //
-//import com.adamszablewski.model.Task;
+//
 //import com.adamszablewski.rabbitMq.RabbitMqProducer;
-//import com.adamszablewski.service.Dao;
+//import com.adamszablewski.utils.Dao;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.extension.ExtendWith;
