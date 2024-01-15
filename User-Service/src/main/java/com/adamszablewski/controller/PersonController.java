@@ -1,5 +1,6 @@
 package com.adamszablewski.controller;
 
+import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.classes.Person;
 import com.adamszablewski.dtos.PersonDto;
 import com.adamszablewski.service.PersonService;
@@ -57,10 +58,11 @@ public class PersonController {
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("")
+    @SecureUserIdResource
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")
-    public ResponseEntity<String> deleteUser(@RequestHeader("userEmail") String userEmail){
-        personService.deleteUser(userEmail);
+    public ResponseEntity<String> deleteUser(@RequestParam long userId){
+        personService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 

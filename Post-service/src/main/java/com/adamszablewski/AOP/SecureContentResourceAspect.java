@@ -24,7 +24,6 @@ public class SecureContentResourceAspect {
 
     @Before("@annotation(secureContentResource) && args(.., request)")
     public void processSecureContentResource(JoinPoint joinPoint, SecureContentResource secureContentResource, HttpServletRequest request) {
-        // Extracting the value parameter from the annotation
 
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
