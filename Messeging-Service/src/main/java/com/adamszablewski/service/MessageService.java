@@ -135,6 +135,10 @@ public class MessageService {
         conversation.getMessages().remove(message);
         messageRepository.delete(message);
     }
+    public void deleteMessageFromConversationForUser(Conversation conversation, Message message) {
+        conversation.getMessages().remove(message);
+        messageRepository.delete(message);
+    }
     @Transactional
     public void deleteMessageFromConversationForAll(String instanceId, long ownerId) {
 

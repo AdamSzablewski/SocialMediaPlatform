@@ -16,12 +16,6 @@ import java.util.List;
 public class Feed {
 
     private long userId;
-//    @ManyToMany
-//    @JoinTable(
-//            name = "feed_posts",
-//            joinColumns = @JoinColumn(name = "feed_id"),
-//            inverseJoinColumns = @JoinColumn(name = "posts_id")
-//    )
     private List<Post> posts;
 
 }

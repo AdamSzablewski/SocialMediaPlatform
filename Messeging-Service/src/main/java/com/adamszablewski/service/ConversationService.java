@@ -1,5 +1,6 @@
 package com.adamszablewski.service;
 
+import com.adamszablewski.exceptions.NoSuchConversationFoundException;
 import com.adamszablewski.exceptions.NoSuchUserFoundException;
 import com.adamszablewski.exceptions.NotAuthorizedException;
 import com.adamszablewski.model.Conversation;
@@ -20,6 +21,7 @@ public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final UserValidator userValidator;
     private final Mapper mapper;
+    private final MessageService messageService;
 
 
     public List<Conversation> getCoversationsForUser(long userId) {
@@ -30,6 +32,15 @@ public class ConversationService {
     public void deleteConversation(long id) {
         conversationRepository.deleteById(id);
     }
+
+    public void deleteConversationForUser(Long userId) {
+        List<Conversation> conversations = conversationRepository.findAllByOwnerId(userId);
+        conversations.forEach(conversation -> {
+            conversation.getMessages().forEach(
+                    message -> messageService.deleteMessageFromConversationForUser(conversation, message));
+        });
+    }
+
 
 //    public ResponseEntity<String> createConversation(String user) {
 //        conversationCreator.createConversation(user);

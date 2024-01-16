@@ -38,7 +38,7 @@ public class PostService {
 //    }
 
     public void deletePostById(long postId) {
-        dao.deletePost(postId);
+        dao.deletePostById(postId);
     }
 
     public void postPost(PostDto post, long userId) {

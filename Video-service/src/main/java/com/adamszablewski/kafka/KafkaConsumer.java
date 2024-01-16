@@ -4,7 +4,6 @@ import com.adamszablewski.utils.Dao;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 

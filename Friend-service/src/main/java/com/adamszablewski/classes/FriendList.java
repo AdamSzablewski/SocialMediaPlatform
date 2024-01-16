@@ -16,7 +16,7 @@ public class FriendList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @JoinTable(
             name = "friend_list_friends",
             joinColumns = @JoinColumn(name = "friend_list_id"),

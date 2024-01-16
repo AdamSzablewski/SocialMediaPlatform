@@ -1,12 +1,11 @@
 package com.adamszablewski.service;
 
 import com.adamszablewski.classes.Person;
-import com.adamszablewski.config.KafkaConfig;
 import com.adamszablewski.dtos.PersonDto;
 import com.adamszablewski.exceptions.IncompleteDataException;
 import com.adamszablewski.exceptions.NoSuchUserException;
-import com.adamszablewski.exceptions.UserAlreadyExistException;
 import com.adamszablewski.feign.SecurityServiceClient;
+import com.adamszablewski.kafka.KafkaMessagePublisher;
 import com.adamszablewski.repository.PersonRepository;
 import com.adamszablewski.utils.EntityUtils;
 import com.adamszablewski.utils.Validator;
@@ -14,8 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +24,7 @@ public class PersonService {
     private final Validator validator;
     private final SecurityServiceClient securityServiceClient;
     private final KafkaTemplate<String, Long> kafkaTemplate;
+    private final KafkaMessagePublisher kafkaMessagePublisher;
 
 
 
@@ -39,9 +37,10 @@ public class PersonService {
                 .orElseThrow(NoSuchUserException::new));
     }
 
-    public void deleteUser(long userId) {
-        personRepository.deleteById(userId);
-        kafkaTemplate.send(KafkaConfig.USER_DELETED, userId);
+    public void deleteUser(Long userId) {
+        //personRepository.deleteById(userId);
+        //kafkaTemplate.send(KafkaConfig.USER_DELETED, userId);
+        kafkaMessagePublisher.snedUserDeletedMessage(userId);
 
     }
 

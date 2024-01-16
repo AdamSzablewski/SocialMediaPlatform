@@ -3,7 +3,6 @@ package com.adamszablewski;
 import com.adamszablewski.classes.Post;
 import com.adamszablewski.classes.Profile;
 import com.adamszablewski.dtos.PostDto;
-import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.feign.ImageServiceClient;
 import com.adamszablewski.feign.VideoServiceClient;
 import com.adamszablewski.rabbitMq.RabbitMqProducer;
@@ -20,9 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +64,7 @@ class PostServiceTest {
 
         postService.deletePostById(postId);
 
-        verify(dao).deletePost(postId);
+        verify(dao).deletePostById(postId);
     }
 
     @Test

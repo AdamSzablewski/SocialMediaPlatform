@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +20,12 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
     private long userId;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Upvote> upvotes = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
+
 }

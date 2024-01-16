@@ -25,11 +25,11 @@ public class Post implements Commentable, Likeable {
     private String text;
     private boolean visible;
     private String multimediaId;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Upvote> likes;
     private String description;
     private LocalDateTime dateTime;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
     @Override
     public String toString() {

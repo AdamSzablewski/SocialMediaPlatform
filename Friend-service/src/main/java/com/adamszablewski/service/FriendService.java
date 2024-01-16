@@ -145,4 +145,8 @@ public class FriendService {
     public List<FriendRequest> getFriendRequestsForUser(long userId) {
         return friendRequestRepository.findByReceiverId(userId);
     }
+
+    public void deleteUserData(Long userId) {
+
+    }
 }

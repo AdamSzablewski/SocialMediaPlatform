@@ -1,10 +1,9 @@
 package com.adamszablewski.kafka;
 
-import com.adamszablewski.utils.Dao;
+import com.adamszablewski.service.FriendService;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 
@@ -12,9 +11,9 @@ import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 @AllArgsConstructor
 public class KafkaConsumer {
 
-    private Dao dao;
+    private final FriendService friendService;
     @KafkaListener(topics = USER_DELETED, groupId = "post-group")
     public void consumeUserDeleted(Long userId){
-        dao.deleteUserData(userId);
+        friendService.deleteUserData(userId);
     }
 }
