@@ -7,6 +7,7 @@ import com.adamszablewski.utils.CustomSortingUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,9 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureTestDatabase
-@DataJpaTest(properties = "spring.config.name=application-test")
+//@ExtendWith(MockitoExtension.class)
+//@AutoConfigureTestDatabase
+//@DataJpaTest(properties = "spring.config.name=application-test")
 public class CustomSortingUtilsTest {
 
     CustomSortingUtil customSortingUtil;

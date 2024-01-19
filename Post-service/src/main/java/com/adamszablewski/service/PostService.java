@@ -1,16 +1,15 @@
 package com.adamszablewski.service;
 
+import com.adamszablewski.kafka.KafkaMessagePublisher;
 import com.adamszablewski.model.Post;
 import com.adamszablewski.model.Profile;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.feign.ImageServiceClient;
 import com.adamszablewski.feign.VideoServiceClient;
-import com.adamszablewski.rabbitMq.RabbitMqProducer;
 import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.repository.ProfileRepository;
 import com.adamszablewski.utils.Dao;
-import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +26,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageServiceClient imageServiceClient;
     private final ProfileRepository profileRepository;
-    private final RabbitMqProducer rabbitMqProducer;
     private final VideoServiceClient videoServiceClient;
-    private final Mapper mapper;
+    private final KafkaMessagePublisher kafkaMessagePublisher;
     private final Dao dao;
 //    public PostDto getPostById(long postId) {
 //        Post post = postRepository.findById(postId)
@@ -78,7 +76,7 @@ public class PostService {
 
         }
         catch (Exception e){
-            rabbitMqProducer.deleteImageByMultimediaId(multimediaId);
+            kafkaMessagePublisher.sendDeleteImageMessage(multimediaId);
             throw new RuntimeException();
         }
         return multimediaId;
@@ -123,7 +121,7 @@ public class PostService {
 
         }
         catch (Exception e){
-            rabbitMqProducer.deleteImageByMultimediaId(multimediaId);
+            kafkaMessagePublisher.sendDeletedVideoMessage(multimediaId);
             throw new RuntimeException();
         }
         return multimediaId;

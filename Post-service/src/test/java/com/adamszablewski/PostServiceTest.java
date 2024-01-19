@@ -11,11 +11,19 @@ import com.adamszablewski.repository.ProfileRepository;
 import com.adamszablewski.service.PostService;
 import com.adamszablewski.utils.Dao;
 import com.adamszablewski.utils.Mapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,38 +32,30 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureTestDatabase
+@DataJpaTest(properties = "spring.config.name=application-test")
 class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
-
     @Mock
     private ImageServiceClient imageServiceClient;
-
     @Mock
     private ProfileRepository profileRepository;
-
     @Mock
     private RabbitMqProducer rabbitMqProducer;
-
     @Mock
     private VideoServiceClient videoServiceClient;
-
-    @Mock
-    private Mapper mapper;
-
     @Mock
     private Dao dao;
 
-    @InjectMocks
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         postService = new PostService(postRepository, imageServiceClient, profileRepository,
-                rabbitMqProducer, videoServiceClient, mapper, dao);
+                rabbitMqProducer, videoServiceClient, dao);
     }
 
     @Test

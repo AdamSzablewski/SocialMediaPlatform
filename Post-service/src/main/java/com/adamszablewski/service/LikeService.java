@@ -21,18 +21,20 @@ public class LikeService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    private boolean checkIfUserAlreadyLiked(Likeable likeableObject, long userId){
+    public boolean checkIfUserAlreadyLiked(Likeable likeableObject, long userId){
         return likeableObject.getLikes().stream()
                 .anyMatch(like -> like.getUserId() == userId);
     }
-    private Upvote removeLike(Likeable likeableObject, long userId){
-        return likeableObject.getLikes().stream()
+    public void removeLike(Likeable likeableObject, long userId){
+        Upvote upvote =  likeableObject.getLikes().stream()
                 .filter(l -> l.getUserId() == userId)
                 .findFirst()
                 .orElse(null);
-
+        if (upvote != null){
+            likeRepository.delete(upvote);
+        }
+        likeableObject.getLikes().remove(upvote);
     }
-
     @Transactional
     public void likePost(long postId, long userId) {
         Post post = postRepository.findById(postId)
@@ -71,21 +73,14 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchPostException::new);
 
-        Upvote like = removeLike(post, userId);
+        removeLike(post, userId);
         postRepository.save(post);
-        if(like != null){
-            likeRepository.save(like);
-        }
+
     }
 
     public void unLikeComment(long commentId, long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NoSuchCommentException::new);
-
-        Upvote like = removeLike(comment, userId);
-        commentRepository.save(comment);
-        if(like != null){
-            likeRepository.save(like);
-        }
+        removeLike(comment, userId);
     }
 }

@@ -145,4 +145,8 @@ public class VideoService {
     public void deleteUserData(Long userId) {
         videoRepository.deleteAllByUserId(userId);
     }
+
+    public void deleteVideo(String multimediaId) {
+        videoRepository.deleteByMultimediaId(multimediaId);
+    }
 }

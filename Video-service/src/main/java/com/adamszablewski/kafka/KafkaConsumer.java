@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import static com.adamszablewski.kafka.KafkaConfig.DELETE_VIDEO;
 import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 
 @Component
@@ -15,5 +16,9 @@ public class KafkaConsumer {
     @KafkaListener(topics = USER_DELETED, groupId = "video-group")
     public void consumeUserDeleted(Long userId){
         videoService.deleteUserData(userId);
+    }
+    @KafkaListener(topics = DELETE_VIDEO, groupId = "video-group")
+    public void consumeVideoDeleted(String multimediaId){
+        videoService.deleteVideo(multimediaId);
     }
 }
