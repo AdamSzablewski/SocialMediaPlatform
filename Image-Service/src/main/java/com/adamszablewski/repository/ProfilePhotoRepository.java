@@ -10,4 +10,6 @@ public interface ProfilePhotoRepository extends JpaRepository<ProfilePhoto, Long
     Optional<ProfilePhoto> findByUserId(long id);
 
     void deleteByMultimediaId(String multimediaId);
+
+    void deleteAllByUserId(Long userId);
 }

@@ -1,7 +1,7 @@
 package com.adamszablewski;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
 
 import com.adamszablewski.repository.CommentRepository;
 import com.adamszablewski.repository.PostRepository;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

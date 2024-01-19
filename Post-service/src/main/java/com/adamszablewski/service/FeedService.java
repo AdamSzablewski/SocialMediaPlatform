@@ -1,7 +1,7 @@
 package com.adamszablewski.service;
 
-import com.adamszablewski.classes.Feed;
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Feed;
+import com.adamszablewski.model.Post;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.feign.FriendServiceClient;
 

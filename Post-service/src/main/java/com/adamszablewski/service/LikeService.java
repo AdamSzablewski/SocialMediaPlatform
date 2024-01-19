@@ -1,9 +1,9 @@
 package com.adamszablewski.service;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Upvote;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Upvote;
 import com.adamszablewski.interfaces.Likeable;
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Post;
 import com.adamszablewski.exceptions.NoSuchCommentException;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.repository.CommentRepository;

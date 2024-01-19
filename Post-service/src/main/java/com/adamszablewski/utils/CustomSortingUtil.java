@@ -1,10 +1,9 @@
 package com.adamszablewski.utils;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 

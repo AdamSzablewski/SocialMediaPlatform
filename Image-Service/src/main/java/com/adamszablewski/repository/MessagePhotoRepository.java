@@ -13,5 +13,7 @@ public interface MessagePhotoRepository extends JpaRepository<MessagePhoto, Long
     Optional<MessagePhoto> findByMultimediaId(String imageId);
 
     void deleteByMultimediaId(String multimediaId);
+
+
 }
 

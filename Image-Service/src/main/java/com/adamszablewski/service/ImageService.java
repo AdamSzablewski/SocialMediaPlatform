@@ -133,7 +133,7 @@ public class ImageService {
                 .orElseThrow(NoSuchImageException::new);
         return ImageUtils.decompressImage(image.getImageData());
     }
-
+    @Transactional
     public void delteImageWithMultimediaId(String multimediaId) {
         imageRepository.deleteByMultimediaId(multimediaId);
         messagePhotoRepository.deleteByMultimediaId(multimediaId);
@@ -146,5 +146,12 @@ public class ImageService {
         ImageData imageData = imageRepository.findByMultimediaId(multimediaId)
                 .orElseThrow(NoSuchImageException::new);
         return imageData.getUserId();
+    }
+    @Transactional
+    public void deleteUserData(Long userId) {
+        postPhotoRepository.deleteAllByUserId(userId);
+        postPhotoRepository.deleteAllByUserId(userId);
+        profilePhotoRepository.deleteAllByUserId(userId);
+        imageRepository.deleteAllByUserId(userId);
     }
 }

@@ -2,9 +2,9 @@ package com.adamszablewski.utils;
 
 
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
-import com.adamszablewski.classes.Upvote;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
+import com.adamszablewski.model.Upvote;
 import com.adamszablewski.dtos.CommentDto;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.dtos.UpvoteDto;

@@ -5,6 +5,17 @@
 ## Översikt
 Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild- eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner.
 
+
+## Använda teknologier
+- **Java:** Det primära programmeringsspråket.
+- **Spring-ramverket** 
+- **Kafka:** Hantering av händelser och meddelanden.
+- **Mikrotjänstarkitektur**
+- **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade annoteringar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för att begränsad tillstånd där det behövs.
+- **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
+- **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.
+- **Resilience4J:** Säkerställer motståndskraft och robusthet i kommunikationen mellan mikrotjänster genom att inkludera Resilience4J som en brytare.
+
 ## Nyckelfunktioner
 - **Inlägg:** Användare kan skapa och dela video, bild eller textbaserade inlägg med sitt nätverk.
 - **Videostreaming:** Videoinlägg kan streamas av användare.
@@ -15,16 +26,6 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 - **Popularitetsmätare:** Populariteten för inlägg och kommentarer bestäms av antalet gillanden och kommentarer, vilket påverkar deras synlighet.
 - **Användarregistrering och autentisering:** Användarregistrering och autentisering med JWT (JSON Web Tokens) för säker användarautentisering.
 - **Enhetsprovning med JUnit och Mockito:** Varje mikrotjänst genomgår omfattande enhetsprovning med JUnit och Mockito för att säkerställa funktionalitet och identifiera och åtgärda potentiella problem.
-
-## Använda teknologier
-- **Java:** Det primära programmeringsspråket.
-- **Spring-ramverket:** Utvecklat med Spring ramvärket för att bygga skalbara mikrotjänster.
-- **Mikrotjänstarkitektur:** Använder mikrotjänstarkitektur för modulär och skalbar utveckling, vilket möjliggör effektiv hantering av komplexa funktioner.
-- **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade annoteringar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för att begränsad tillstånd där det behövs.
-- **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
-- **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.
-- **RabbitMQ:** Underlättar kommunikationen mellan mikrotjänster, särskilt för hantering av händelser och meddelanden.
-- **Resilience4J:** Säkerställer motståndskraft och robusthet i kommunikationen mellan mikrotjänster genom att inkludera Resilience4J som en brytare.
 
 ## Mikrotjänster
 

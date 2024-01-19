@@ -1,8 +1,8 @@
 package com.adamszablewski;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
-import com.adamszablewski.classes.Upvote;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
+import com.adamszablewski.model.Upvote;
 import com.adamszablewski.utils.CustomSortingUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

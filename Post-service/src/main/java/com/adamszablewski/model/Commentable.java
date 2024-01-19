@@ -1,4 +1,4 @@
-package com.adamszablewski.classes;
+package com.adamszablewski.model;
 
 import java.util.List;
 

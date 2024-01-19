@@ -5,6 +5,23 @@
 ## Overview
 The Social Media Application is a platform showcasing my proficiency in Java development, Spring framework, and microservices architecture. It provides users with the ability to connect, share posts, engage with content, and communicate seamlessly with the built in messeging function. The application encompasses features such as adding friends, posting text and image posts, commenting on posts, answering to other comments, and liking content to influence its popularity.
 
+## Technologies Used
+- **Java:** The primary programming language.
+
+- **Spring Framework:** Leveraging the Spring ecosystem, including Spring Boot, Spring Data JPA, and Spring Security, to build scalable microservices.
+
+- **Microservices Architecture:** Employing microservices architecture for modular and scalable development, allowing for the efficient management of complex features.
+
+- **Kafka:** Facilitating communication between microservices, particularly for handling events and messages.
+
+- **AOP :** Using a a combination of Aspect Oriented Programming and custom annotations for implementing method level security.
+
+- **JUnit and Mockito:** Utilizing JUnit and Mockito for thorough unit testing to ensure the reliability of microservices.
+
+- **PostgreSQL:** Managing data, including posts and user information, using PostgreSQL as the database management system.
+
+- **Resilience4J:** Ensuring resilience and robustness in microservices communication by incorporating Resilience4J as a circuit breaker.
+
 ## Key Features
 - **Post Creation:** Users can create and share text or image-based posts with their network.
 
@@ -22,22 +39,6 @@ The Social Media Application is a platform showcasing my proficiency in Java dev
 
 - **Unit Testing with JUnit and Mockito:** Each microservice undergoes comprehensive unit testing with JUnit and Mockito to ensure functionality and identify and address potential issues.
 
-## Technologies Used
-- **Java:** The primary programming language.
-
-- **Spring Framework:** Leveraging the Spring ecosystem, including Spring Boot, Spring Data JPA, and Spring Security, to build scalable microservices.
-
-- **Microservices Architecture:** Employing microservices architecture for modular and scalable development, allowing for the efficient management of complex features.
-
-- **AOP :** Using a a combination of Aspect Oriented Programming and custom annotations for implementing method level security.
-
-- **JUnit and Mockito:** Utilizing JUnit and Mockito for thorough unit testing to ensure the reliability of microservices.
-
-- **PostgreSQL:** Managing data, including posts and user information, using PostgreSQL as the database management system.
-
-- **RabbitMQ:** Facilitating communication between microservices, particularly for handling events and messages.
-
-- **Resilience4J:** Ensuring resilience and robustness in microservices communication by incorporating Resilience4J as a circuit breaker.
 
 ## Microservices
 

@@ -1,6 +1,6 @@
 package com.adamszablewski.repository;
 
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package com.adamszablewski.interfaces;
 
-import com.adamszablewski.classes.Upvote;
+import com.adamszablewski.model.Upvote;
 
 import java.util.Set;
 

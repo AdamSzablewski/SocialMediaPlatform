@@ -146,7 +146,7 @@ public class FriendService {
         return friendRequestRepository.findByReceiverId(userId);
     }
 
-    public void deleteUserData(Long userId) {
-
+    public void deleteUserData(long userId) {
+        friendRepository.deleteByUserId(userId);
     }
 }

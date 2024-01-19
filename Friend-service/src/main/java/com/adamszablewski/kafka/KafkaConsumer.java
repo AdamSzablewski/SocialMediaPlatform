@@ -12,7 +12,7 @@ import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 public class KafkaConsumer {
 
     private final FriendService friendService;
-    @KafkaListener(topics = USER_DELETED, groupId = "post-group")
+    @KafkaListener(topics = USER_DELETED, groupId = "friend-group")
     public void consumeUserDeleted(Long userId){
         friendService.deleteUserData(userId);
     }

@@ -1,7 +1,7 @@
 package com.adamszablewski.repository;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Feed;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Feed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

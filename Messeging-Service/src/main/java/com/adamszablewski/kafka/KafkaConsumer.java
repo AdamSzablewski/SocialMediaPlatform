@@ -13,7 +13,7 @@ public class KafkaConsumer {
 
     private final ConversationService conversationService;
 
-    @KafkaListener(topics = USER_DELETED, groupId = "post-group")
+    @KafkaListener(topics = USER_DELETED, groupId = "message-group")
     public void consumeUserDeleted(Long userId){
         conversationService.deleteConversationForUser(userId);
     }

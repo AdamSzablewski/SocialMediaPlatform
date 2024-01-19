@@ -1,4 +1,4 @@
-package com.adamszablewski.classes;
+package com.adamszablewski.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

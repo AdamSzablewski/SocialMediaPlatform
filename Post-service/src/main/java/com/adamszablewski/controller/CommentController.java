@@ -2,7 +2,7 @@ package com.adamszablewski.controller;
 
 import com.adamszablewski.annotations.SecureContentResource;
 import com.adamszablewski.annotations.SecureUserIdResource;
-import com.adamszablewski.classes.Comment;
+import com.adamszablewski.model.Comment;
 import com.adamszablewski.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;

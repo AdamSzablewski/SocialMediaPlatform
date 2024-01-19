@@ -12,6 +12,7 @@ import com.adamszablewski.utils.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Service
@@ -36,10 +37,8 @@ public class PersonService {
         return entityUtils.mapPersonToDto(personRepository.findByEmail(email)
                 .orElseThrow(NoSuchUserException::new));
     }
-
     public void deleteUser(Long userId) {
-        //personRepository.deleteById(userId);
-        //kafkaTemplate.send(KafkaConfig.USER_DELETED, userId);
+        personRepository.deleteById(userId);
         kafkaMessagePublisher.snedUserDeletedMessage(userId);
 
     }

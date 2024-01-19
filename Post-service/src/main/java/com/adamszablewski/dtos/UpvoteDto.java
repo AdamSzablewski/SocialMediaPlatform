@@ -1,7 +1,7 @@
 package com.adamszablewski.dtos;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

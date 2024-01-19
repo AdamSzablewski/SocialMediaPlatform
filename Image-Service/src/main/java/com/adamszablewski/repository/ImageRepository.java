@@ -14,4 +14,6 @@ public interface ImageRepository extends JpaRepository<ImageData, Long> {
     Optional<ImageData> findByMultimediaId(String imageId);
 
     void deleteByMultimediaId(String multimediaId);
+
+    void deleteAllByUserId(Long userId);
 }

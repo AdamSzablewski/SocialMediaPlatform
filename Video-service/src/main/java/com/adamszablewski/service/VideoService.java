@@ -1,22 +1,15 @@
 package com.adamszablewski.service;
 
-import com.adamszablewski.enteties.Video;
+import com.adamszablewski.Model.Video;
 import com.adamszablewski.repository.VideoRepository;
 import com.adamszablewski.util.UniqueIdGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
@@ -24,8 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -149,5 +140,9 @@ public class VideoService {
                 return Mono.error(new RuntimeException(e));
             }
         });
+    }
+
+    public void deleteUserData(Long userId) {
+        videoRepository.deleteAllByUserId(userId);
     }
 }

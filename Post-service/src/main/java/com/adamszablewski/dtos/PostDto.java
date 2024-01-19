@@ -1,6 +1,5 @@
 package com.adamszablewski.dtos;
 
-import com.adamszablewski.classes.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

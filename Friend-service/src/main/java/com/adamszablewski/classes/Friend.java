@@ -20,7 +20,7 @@ public class Friend implements Identifiable, UserResource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private FriendList friendList;
     @Override
     public String toString() {

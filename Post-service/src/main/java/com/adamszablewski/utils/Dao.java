@@ -1,8 +1,8 @@
 package com.adamszablewski.utils;
 
-import com.adamszablewski.classes.Comment;
-import com.adamszablewski.classes.Post;
-import com.adamszablewski.classes.Profile;
+import com.adamszablewski.model.Comment;
+import com.adamszablewski.model.Post;
+import com.adamszablewski.model.Profile;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.repository.CommentRepository;
 import com.adamszablewski.repository.PostRepository;

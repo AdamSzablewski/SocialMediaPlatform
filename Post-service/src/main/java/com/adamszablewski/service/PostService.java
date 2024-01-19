@@ -1,7 +1,7 @@
 package com.adamszablewski.service;
 
-import com.adamszablewski.classes.Post;
-import com.adamszablewski.classes.Profile;
+import com.adamszablewski.model.Post;
+import com.adamszablewski.model.Profile;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.exceptions.NoSuchPostException;
 import com.adamszablewski.feign.ImageServiceClient;

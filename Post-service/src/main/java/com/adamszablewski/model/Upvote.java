@@ -1,4 +1,4 @@
-package com.adamszablewski.classes;
+package com.adamszablewski.model;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +18,6 @@ public class Upvote {
     private LocalDateTime dateTime;
     @ManyToOne
     private Post post;
-    @OneToOne
+    @ManyToOne
     private Comment comment;
 }
