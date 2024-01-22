@@ -1,7 +1,9 @@
 package com.adamszablewski.service;
 
+import com.adamszablewski.feign.UniqueIDServiceClient;
 import com.adamszablewski.kafka.KafkaMessagePublisher;
 import com.adamszablewski.model.Post;
+import com.adamszablewski.model.PostType;
 import com.adamszablewski.model.Profile;
 import com.adamszablewski.dtos.PostDto;
 import com.adamszablewski.exceptions.NoSuchPostException;
@@ -11,14 +13,17 @@ import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.repository.ProfileRepository;
 import com.adamszablewski.utils.Dao;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @AllArgsConstructor
@@ -29,11 +34,7 @@ public class PostService {
     private final VideoServiceClient videoServiceClient;
     private final KafkaMessagePublisher kafkaMessagePublisher;
     private final Dao dao;
-//    public PostDto getPostById(long postId) {
-//        Post post = postRepository.findById(postId)
-//                .orElseThrow(NoSuchPostException::new);
-//        return mapper.mapPostToDto(post);
-//    }
+    private final UniqueIDServiceClient uniqueIDServiceClient;
 
     public void deletePostById(long postId) {
         dao.deletePostById(postId);
@@ -55,32 +56,48 @@ public class PostService {
         postRepository.deleteById(postId);
     }
     @Transactional
-    public String postImagePost(long userId, MultipartFile image) throws IOException {
-        String multimediaId = imageServiceClient.sendImageToImageServiceAndGetImageId(image.getBytes(), userId);
+    public Mono<String> postImagePost(long userId, MultipartFile image) {
+        AtomicReference<String> multimediaID = new AtomicReference<>(uniqueIDServiceClient.getUniqueImageId());
+        uploadImageAsync(image, userId, multimediaID.get())
+                .doOnError(error -> multimediaID.set(""))
+                .doOnSuccess(success -> createHiddenPost(PostType.IMAGE, userId, multimediaID.get()));
+        System.out.println("done success");
+        return Mono.just(multimediaID.get());
+    }
+    @Async
+    private Mono<Void> uploadImageAsync(MultipartFile image, long userId, String multimediaID) {
+        return Mono.fromFuture(CompletableFuture.runAsync(() -> {
+            try {
+                imageServiceClient.sendImageToImageService(image, userId, multimediaID);
+            } catch (Exception e) {
+                postRepository.deleteByMultimediaId(multimediaID);
+            }
+        }));
+    }
+    private void savePostDetails(long userId, String multimediaID) {
         Post newPost = Post.builder()
                 .userId(userId)
                 .likes(new HashSet<>())
-                .multimediaId(multimediaId)
+                .multimediaId(multimediaID)
                 .comments(new ArrayList<>())
                 .visible(false)
                 .build();
+
         Profile profile = profileRepository.findByUserId(userId)
-                .orElseGet(()-> createProfile(userId));
-        if (profile.getPosts() == null){
+                .orElseGet(() -> createProfile(userId));
+
+        if (profile.getPosts() == null) {
             profile.setPosts(new ArrayList<>());
         }
-        try{
+
+        try {
             profile.getPosts().add(newPost);
             postRepository.save(newPost);
             profileRepository.save(profile);
-
+        } catch (Exception e) {
+            kafkaMessagePublisher.sendDeleteImageMessage(multimediaID);
+            throw new RuntimeException("Error during post creation", e);
         }
-        catch (Exception e){
-            kafkaMessagePublisher.sendDeleteImageMessage(multimediaId);
-            throw new RuntimeException();
-        }
-        return multimediaId;
-
     }
     private Profile createProfile(long userId){
         Profile newProfile = Profile.builder()
@@ -97,18 +114,26 @@ public class PostService {
         post.setVisible(true);
         postRepository.save(post);
     }
+    @Transactional
+    public Mono<String> uploadVideoForPost(long userId, MultipartFile video) {
+        AtomicReference<String> multimediaID = new AtomicReference<>(uniqueIDServiceClient.getUniqueImageId());
+       uploadVideoAsync(video, userId, multimediaID.get())
+               .doOnError(error -> multimediaID.set(""))
+               .doOnSuccess(success -> createHiddenPost(PostType.VIDEO, userId, multimediaID.get()));
+       return Mono.just(multimediaID.get());
+    }
+    public void createHiddenPost(PostType type, long userId, String multimediaID){
 
-    public String uploadVideoForPost(long userId, MultipartFile video) throws IOException {
-       // String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video.getBytes(), video.getContentType(), userId);
-        String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video, userId);
-
+        System.out.println("creting post");
         Post newPost = Post.builder()
                 .userId(userId)
                 .likes(new HashSet<>())
-                .multimediaId(multimediaId)
+                .multimediaId(multimediaID)
                 .comments(new ArrayList<>())
+                .type(type)
                 .visible(false)
                 .build();
+
         Profile profile = profileRepository.findByUserId(userId)
                 .orElseGet(()-> createProfile(userId));
         if (profile.getPosts() == null){
@@ -118,13 +143,24 @@ public class PostService {
             profile.getPosts().add(newPost);
             postRepository.save(newPost);
             profileRepository.save(profile);
-
-        }
-        catch (Exception e){
-            kafkaMessagePublisher.sendDeletedVideoMessage(multimediaId);
+        } catch (Exception e){
+            kafkaMessagePublisher.sendDeletedVideoMessage(multimediaID);
             throw new RuntimeException();
         }
-        return multimediaId;
 
+    }
+
+    @Async
+    public Mono<String> uploadVideoAsync(MultipartFile video, long userId, String multimediaID){
+        return Mono.fromFuture(()->
+                    CompletableFuture.runAsync(()->{
+                        try {
+                            videoServiceClient.sendImageToImageService(video, userId, multimediaID);
+                        }catch (Exception e){
+                            throw new RuntimeException("Failed to export video");
+                        }
+                    })
+
+              ).thenReturn(multimediaID);
     }
 }

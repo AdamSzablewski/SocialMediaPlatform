@@ -39,6 +39,9 @@ public class GatewayConfig {
                 .route("post-service", r -> r
                         .path("/posts/**")
                         .uri("lb://POST-SERVICE"))
+                .route("uniqueID-service", r -> r
+                        .path("/uniqueID/**")
+                        .uri("lb://UNIQUEID-SERVICE"))
                 .route("eureka-status", r -> r
                         .path("/eureka/**")
                         .uri("http://localhost:8761"))

@@ -127,12 +127,8 @@ public class ImageService {
     public void removePostImage(long postId) {
         postPhotoRepository.deleteByPostId(postId);
     }
+   
 
-    public byte[] getImageByImageId(String mltimediaId) {
-        ImageData image = imageRepository.findByMultimediaId(mltimediaId)
-                .orElseThrow(NoSuchImageException::new);
-        return ImageUtils.decompressImage(image.getImageData());
-    }
     @Transactional
     public void delteImageWithMultimediaId(String multimediaId) {
         imageRepository.deleteByMultimediaId(multimediaId);
@@ -153,5 +149,21 @@ public class ImageService {
         postPhotoRepository.deleteAllByUserId(userId);
         profilePhotoRepository.deleteAllByUserId(userId);
         imageRepository.deleteAllByUserId(userId);
+    }
+
+    public void addImage(MultipartFile image, long userId, String multimediaID) throws IOException {
+        ImageData imageData = ImageData.builder()
+                .imageData(image.getBytes())
+                .type(image.getContentType())
+                .userId(userId)
+                .multimediaId(multimediaID)
+                .build();
+        imageRepository.save(imageData);
+    }
+    @Transactional
+    public byte[] getImageByImageId(String imageId) {
+        ImageData imageData = imageRepository.findByMultimediaId(imageId)
+                .orElseThrow(NoSuchImageException::new);
+        return imageData.getImageData();
     }
 }

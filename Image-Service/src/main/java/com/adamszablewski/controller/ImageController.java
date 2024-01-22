@@ -22,23 +22,17 @@ public class ImageController {
 
     private final ImageService imageService;
 
-//    @PostMapping("/")
-//    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
-//        imageService.uploadImage(file);
-//        return ResponseEntity.ok("File upploaded");
-//    }
-
     @GetMapping()
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
     public ResponseEntity<byte[]> getImageByImageId(@RequestParam("multimediaId") String imageId)
-    //@RequestHeader("userEmail") String userEmail) throws IOException
     {
         byte[] imageData = imageService.getImageByImageId(imageId);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(imageData);
     }
+
     @PostMapping()
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
@@ -71,6 +65,15 @@ public class ImageController {
                                                   @RequestParam("recipients")Set<Long> recipients) throws IOException {
         String imageId = imageService.addMessageImage(imageData, recipients);
         return ResponseEntity.ok(imageId);
+    }
+    @PostMapping("/upload/file")
+    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "imageServiceRateLimiter")
+    public ResponseEntity<String> addImage(@RequestPart("image") MultipartFile image,
+                                           @RequestParam("userId") long userId,
+                                           @RequestParam("multimediaId") String multimediaID) throws IOException {
+        imageService.addImage(image, userId, multimediaID);
+        return ResponseEntity.ok().build();
     }
     @GetMapping("/message/id/{imageId}/user/{userId}")
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")

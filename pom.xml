@@ -13,6 +13,10 @@
         <module>Security-Service</module>
         <module>Image-Service</module>
 		<module>Video-service</module>
+		<module>UniqueID-service</module>
+		<module>Notification-Service</module>
+		<module>Post-service-Command</module>
+		<module>Post-service-Query</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
