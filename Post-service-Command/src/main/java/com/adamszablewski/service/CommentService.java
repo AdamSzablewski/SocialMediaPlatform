@@ -1,7 +1,11 @@
 package com.adamszablewski.service;
 
+import com.adamszablewski.events.CommentEvent;
+import com.adamszablewski.events.EventType;
+import com.adamszablewski.events.PostEvent;
 import com.adamszablewski.exceptions.NoSuchCommentException;
 import com.adamszablewski.exceptions.NoSuchPostException;
+import com.adamszablewski.kafka.KafkaMessagePublisher;
 import com.adamszablewski.model.Comment;
 import com.adamszablewski.model.Post;
 import com.adamszablewski.repository.CommentRepository;
@@ -21,18 +25,8 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final Dao dao;
+    private final KafkaMessagePublisher kafkaMessagePublisher;
 
-
-    public List<Comment> getCommentsForPost(long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(NoSuchCommentException::new);
-        return post.getComments();
-    }
-    public List<Comment> getCommentsForComment(long postId) {
-        Comment comment = commentRepository.findById(postId)
-                .orElseThrow(NoSuchCommentException::new);
-        return comment.getAnswers();
-    }
     @Transactional
     public void deleteCommentForPost(long postId, long commentId) {
         Post post = postRepository.findById(postId)
@@ -42,7 +36,8 @@ public class CommentService {
                 .findFirst()
                 .orElseThrow(NoSuchCommentException::new);
         post.getComments().remove(commentToRemove);
-        dao.deleteComment(commentToRemove);
+        commentRepository.delete(commentToRemove);
+        kafkaMessagePublisher.sendCommentEventMessage(new CommentEvent(EventType.DELETE, commentToRemove));
     }
     @Transactional
     public void deleteCommentForComment (long parentCommentId, long commentId) {
@@ -53,8 +48,8 @@ public class CommentService {
                 .findFirst()
                 .orElseThrow(NoSuchCommentException::new);
         parentComment.getAnswers().remove(commentToRemove);
-        System.out.println(commentToRemove);
-        dao.deleteComment(commentToRemove);
+        commentRepository.delete(commentToRemove);
+        kafkaMessagePublisher.sendCommentEventMessage(new CommentEvent(EventType.DELETE, commentToRemove));
     }
     @Transactional
     public void postCommentForPost(long postId, Comment commentData) {
@@ -68,6 +63,8 @@ public class CommentService {
         post.getComments().add(comment);
         commentRepository.save(comment);
         postRepository.save(post);
+        kafkaMessagePublisher.sendCommentEventMessage(new CommentEvent(EventType.CREATE, comment));
+        kafkaMessagePublisher.sendPostEventMessage(new PostEvent(EventType.UPDATE, post));
     }
     @Transactional
     public void postCommentForComment(long commentId, Comment commentData, long userId) {
@@ -85,5 +82,7 @@ public class CommentService {
         parent.getAnswers().add(comment);
         commentRepository.save(comment);
         commentRepository.save(parent);
+        kafkaMessagePublisher.sendCommentEventMessage(new CommentEvent(EventType.CREATE, comment));
+        kafkaMessagePublisher.sendCommentEventMessage(new CommentEvent(EventType.UPDATE, comment));
     }
 }

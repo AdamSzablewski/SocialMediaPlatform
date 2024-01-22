@@ -42,26 +42,7 @@ public class LikeController {
         likeService.likeComment(commentId, userId);
         return ResponseEntity.ok().build();
     }
-    @DeleteMapping("/posts")
-    @SecureUserIdResource
-    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "postServiceRateLimiter")
-    public ResponseEntity<String> unLikePost(@RequestParam("postId") long postId,
-                                            @RequestParam("userId")long userId,
-                                             HttpServletRequest servletRequest){
-        likeService.unLikePost(postId, userId);
-        return ResponseEntity.ok().build();
-    }
-    @DeleteMapping("/comments")
-    @SecureUserIdResource
-    @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "postServiceRateLimiter")
-    public ResponseEntity<String> unLikeComment(@RequestParam("commentId") long commentId,
-                                              @RequestParam("userId")long userId,
-                                                HttpServletRequest servletRequest){
-        likeService.unLikeComment(commentId, userId);
-        return ResponseEntity.ok().build();
-    }
+
 
     public ResponseEntity<?> fallBackMethod(Throwable throwable){
         return exceptionHandler.handleException(throwable);

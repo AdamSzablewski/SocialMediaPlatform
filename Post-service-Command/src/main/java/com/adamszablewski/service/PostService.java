@@ -71,7 +71,8 @@ public class PostService {
     }
     @Transactional
     public String uploadImageForPost(long userId, MultipartFile image) {
-        String multimediaId = imageServiceClient.sendImageToImageServiceAndGetImageId(image, userId);
+        String multimediaId = uniqueIDServiceClient.getUniqueImageId();
+        imageServiceClient.sendImageToImageService(image, userId, multimediaId);
         createHiddenPost(PostType.IMAGE, userId, multimediaId);
         return multimediaId;
     }

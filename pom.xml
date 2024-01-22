@@ -17,6 +17,7 @@
 		<module>Notification-Service</module>
 		<module>Post-service-Command</module>
 		<module>Post-service-Query</module>
+		<module>Post-service-ReadModel-Projector</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
