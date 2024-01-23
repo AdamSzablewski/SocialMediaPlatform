@@ -18,7 +18,6 @@ import java.util.Set;
 @Builder
 public class Profile {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();

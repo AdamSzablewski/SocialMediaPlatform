@@ -1,15 +1,13 @@
 package com.adamszablewski.eventHandler;
 
 import com.adamszablewski.dao.Dao;
-import com.adamszablewski.eventHandler.events.CommentEvent;
-import com.adamszablewski.eventHandler.events.PostEvent;
-import com.adamszablewski.eventHandler.events.ProfileEvent;
-import com.adamszablewski.eventHandler.events.UpvoteEvent;
-import com.adamszablewski.eventHandler.kafka.KafkaConfig;
+import com.adamszablewski.events.CommentEvent;
+import com.adamszablewski.events.PostEvent;
+import com.adamszablewski.events.ProfileEvent;
+import com.adamszablewski.events.UpvoteEvent;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import static com.adamszablewski.eventHandler.kafka.KafkaConfig.*;
 
@@ -18,19 +16,20 @@ import static com.adamszablewski.eventHandler.kafka.KafkaConfig.*;
 public class KafkaEventHandler {
     private final Dao dao;
 
-    @KafkaListener(topics = POST_EVENT_TOPIC, groupId = "post-group-read")
+    @KafkaListener(topics = POST_EVENT_TOPIC, groupId = GROUP)
     public void consumePostEventTopic(PostEvent event){
+        System.out.println("called "+event);
         dao.consumePostEvent(event);
     }
-    @KafkaListener(topics = COMMENT_EVENT_TOPIC, groupId = "post-group-read")
+    @KafkaListener(topics = COMMENT_EVENT_TOPIC, groupId = GROUP)
     public void consumeCommentEventTopic(CommentEvent event){
         dao.consumeCommentEvent(event);
     }
-    @KafkaListener(topics = UPVOTE_EVENT_TOPIC, groupId = "post-group-read")
+    @KafkaListener(topics = UPVOTE_EVENT_TOPIC, groupId = GROUP)
     public void consumeUpvoteEventTopic(UpvoteEvent event){
         dao.consumeUpvoteEvent(event);
     }
-    @KafkaListener(topics = PROFILE_EVENT_TOPIC, groupId = "post-group-read")
+    @KafkaListener(topics = PROFILE_EVENT_TOPIC, groupId = GROUP)
     public void consumeProfileEventTopic(ProfileEvent event){
         dao.consumeProfileEvent(event);
     }

@@ -42,6 +42,8 @@ public class Mapper {
                 .likes(countLikes(post))
                 .comments(post.getComments() == null ? new ArrayList<>() : mapCommentToDto(post.getComments()))
                 .text(post.getText())
+                .creationTime(post.getCreationTime())
+                .type(post.getPostType())
                 .multimediaId(post.getMultimediaId())
                 .description(post.getDescription())
                 .build();

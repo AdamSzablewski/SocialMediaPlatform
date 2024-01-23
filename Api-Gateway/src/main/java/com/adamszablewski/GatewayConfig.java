@@ -36,9 +36,12 @@ public class GatewayConfig {
                 .route("friend-service", r -> r
                         .path("/friends/**")
                         .uri("lb://FRIEND-SERVICE"))
-                .route("post-service", r -> r
-                        .path("/posts/**")
-                        .uri("lb://POST-SERVICE"))
+                .route("post-service-command", r -> r
+                        .path("/posts/write/**")
+                        .uri("lb://POST-SERVICE-COMMAND"))
+                .route("post-service-query", r -> r
+                        .path("/posts/read/**")
+                        .uri("lb://POST-SERVICE-QUERY"))
                 .route("uniqueID-service", r -> r
                         .path("/uniqueID/**")
                         .uri("lb://UNIQUEID-SERVICE"))

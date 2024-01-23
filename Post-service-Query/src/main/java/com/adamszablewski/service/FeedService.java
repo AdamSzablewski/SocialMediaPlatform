@@ -21,7 +21,6 @@ public class FeedService {
 
     private final PostRepository postRepository;
     private final FriendServiceClient friendServiceClient;
-    private final Mapper mapper;
     private final CustomSortingUtil feedUtil;
 
     public List<PostDto> getFeedForUser(long userId){
@@ -44,7 +43,7 @@ public class FeedService {
     @Transactional
     private void updateFeed(Feed feed){
         List<Long> friends = friendServiceClient.getFriendsForUser(feed.getUserId());
-        PriorityQueue<Post> newPosts = new PriorityQueue<>(Comparator.comparing(Post::getDateTime));
+        PriorityQueue<Post> newPosts = new PriorityQueue<>(Comparator.comparing(Post::getCreationTime));
         addPostsForUserIdToList(feed, newPosts, feed.getUserId());
 
         friends.forEach(friendId -> addPostsForUserIdToList(feed, newPosts, friendId));
@@ -62,6 +61,7 @@ public class FeedService {
     }
     private void addPostsForUserIdToList(Feed feed, Collection<Post> newPosts, long userId){
         List<Post> posts = postRepository.getAllByUserId(userId);
+        posts.forEach(System.out::println);
         posts.forEach(post -> {
             if (!feed.getPosts().contains(post)){
                 feedUtil.sortComments(post);

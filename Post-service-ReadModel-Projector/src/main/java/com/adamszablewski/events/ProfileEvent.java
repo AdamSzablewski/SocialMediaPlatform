@@ -1,6 +1,6 @@
-package com.adamszablewski.eventHandler.events;
+package com.adamszablewski.events;
 
-import com.adamszablewski.model.Upvote;
+import com.adamszablewski.model.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Builder
-public class UpvoteEvent {
+public class ProfileEvent {
     private EventType eventType;
-    private Upvote upvote;
+    private Profile profile;
 }

@@ -1,9 +1,9 @@
 package com.adamszablewski.dao;
 
-import com.adamszablewski.eventHandler.events.CommentEvent;
-import com.adamszablewski.eventHandler.events.PostEvent;
-import com.adamszablewski.eventHandler.events.ProfileEvent;
-import com.adamszablewski.eventHandler.events.UpvoteEvent;
+import com.adamszablewski.events.CommentEvent;
+import com.adamszablewski.events.PostEvent;
+import com.adamszablewski.events.ProfileEvent;
+import com.adamszablewski.events.UpvoteEvent;
 import com.adamszablewski.model.Comment;
 import com.adamszablewski.model.Post;
 import com.adamszablewski.model.Profile;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/posts/likes")
+@RequestMapping("/posts/write/likes")
 public class LikeController {
 
     private final ExceptionHandler exceptionHandler;

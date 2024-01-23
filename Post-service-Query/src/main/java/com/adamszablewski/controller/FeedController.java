@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/posts/feed")
+@RequestMapping("/posts/read/feed")
 @AllArgsConstructor
 public class FeedController {
 

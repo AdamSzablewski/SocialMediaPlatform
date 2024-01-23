@@ -16,8 +16,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p JOIN p.comments c WHERE c.id = :commentId")
     Optional<Post> findByCommentId(@Param("commentId") long commentId);
-
-    void deleteAllByUserId(long userId);
-
-    void deleteByMultimediaId(String multimediaID);
 }

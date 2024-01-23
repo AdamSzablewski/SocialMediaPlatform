@@ -1,4 +1,4 @@
-package com.adamszablewski.eventHandler.events;
+package com.adamszablewski.events;
 
 import com.adamszablewski.model.Post;
 import lombok.AllArgsConstructor;

@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/posts")
+@RequestMapping("/posts/write")
 public class PostController {
 
     private final PostService postService;

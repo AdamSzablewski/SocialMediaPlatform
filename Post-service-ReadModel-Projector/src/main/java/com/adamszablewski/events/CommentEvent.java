@@ -1,6 +1,6 @@
-package com.adamszablewski.eventHandler.events;
+package com.adamszablewski.events;
 
-import com.adamszablewski.model.Profile;
+import com.adamszablewski.model.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Builder
-public class ProfileEvent {
+public class CommentEvent {
     private EventType eventType;
-    private Profile profile;
+    private Comment comment;
 }

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 public class Upvote {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
     private LocalDateTime dateTime;

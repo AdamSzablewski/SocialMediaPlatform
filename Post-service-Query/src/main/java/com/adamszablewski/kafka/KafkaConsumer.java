@@ -1,6 +1,5 @@
 package com.adamszablewski.kafka;
 
-import com.adamszablewski.utils.Dao;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

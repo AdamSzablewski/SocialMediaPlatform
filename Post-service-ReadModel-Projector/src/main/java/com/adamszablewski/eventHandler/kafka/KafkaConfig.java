@@ -12,4 +12,5 @@ public class KafkaConfig {
     public static final String COMMENT_EVENT_TOPIC = "comment-event-topic";
     public static final String UPVOTE_EVENT_TOPIC = "upvote-event-topic";
     public static final String PROFILE_EVENT_TOPIC = "profile-event-topic";
+    public static final String GROUP = "post-group-projector";
 }

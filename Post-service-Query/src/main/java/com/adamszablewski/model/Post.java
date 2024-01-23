@@ -19,17 +19,16 @@ import java.util.Set;
 @Builder
 public class Post implements Commentable, Likeable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
     private String text;
     private boolean visible;
     private String multimediaId;
-    private PostType type;
+    private PostType postType;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Upvote> likes;
     private String description;
-    private LocalDateTime dateTime;
+    private LocalDateTime creationTime;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
     @Override
@@ -42,8 +41,9 @@ public class Post implements Commentable, Likeable {
                 ", multimediaId='" + multimediaId + '\'' +
                 ", likes=" + likes +
                 ", description='" + description + '\'' +
-                ", dateTime=" + dateTime +
+                ", dateTime=" + creationTime +
                 ", comments=" + comments +
+                ", type "+postType+
                 '}';
     }
 }

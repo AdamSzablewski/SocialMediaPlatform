@@ -1,5 +1,5 @@
 package com.adamszablewski.model;
-import com.adamszablewski.interfaces.Likeable;
+import com.adamszablewski.model.interfaces.Likeable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,6 @@ import java.util.Set;
 @Data
 public class Comment implements Commentable, Likeable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String text;
     private long userId;
