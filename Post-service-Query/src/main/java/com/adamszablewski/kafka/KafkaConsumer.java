@@ -10,9 +10,9 @@ import static com.adamszablewski.kafka.KafkaConfig.USER_DELETED;
 @AllArgsConstructor
 public class KafkaConsumer {
 
-    private Dao dao;
-    @KafkaListener(topics = USER_DELETED, groupId = "post-group")
-    public void consumeUserDeleted(Long userId){
-        dao.deleteUserData(userId);
-    }
+//    private Dao dao;
+//    @KafkaListener(topics = USER_DELETED, groupId = "post-group")
+//    public void consumeUserDeleted(Long userId){
+//        dao.deleteUserData(userId);
+//    }
 }

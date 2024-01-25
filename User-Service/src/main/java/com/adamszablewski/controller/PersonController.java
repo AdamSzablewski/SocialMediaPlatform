@@ -8,9 +8,11 @@ import com.adamszablewski.utils.ExceptionHandler;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @Controller
 @AllArgsConstructor
@@ -44,11 +46,11 @@ public class PersonController {
     public ResponseEntity<String> getUsernameFromId(@RequestParam(name = "userId")long userId){
         return ResponseEntity.ok(personService.getUsernameFromId(userId));
     }
-    @GetMapping("/password/hashed")
+    @GetMapping(value = "/password/hashed", produces = MediaType.APPLICATION_JSON_VALUE)
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")
-    public ResponseEntity<String> getHashedPassword(@RequestParam("userEmail") String userEmail){
-        return ResponseEntity.ok(personService.getHashedPassword(userEmail));
+    public Mono<String> getHashedPassword(@RequestParam("userEmail") String userEmail){
+        return Mono.just(personService.getHashedPassword(userEmail));
     }
     @PostMapping()
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")

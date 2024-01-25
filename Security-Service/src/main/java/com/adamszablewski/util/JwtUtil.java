@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.security.Key;
 
@@ -19,7 +20,7 @@ public class JwtUtil {
 
         return claims.getSubject();
     }
-    public boolean validateToken(String token) {
+    public Boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;

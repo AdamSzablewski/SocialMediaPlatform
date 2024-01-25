@@ -15,12 +15,14 @@ import com.adamszablewski.repository.FriendRequestRepository;
 import com.adamszablewski.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,13 +43,15 @@ public class FriendService {
         }
         return mapper.mapFriendlistToDto(friend.getFriendList());
     }
-    public List<Long> getFriendIdsForUser(long userId) {
+    public Flux<Long> getFriendIdsForUser(long userId) {
         Friend friend = friendRepository.findByUserId(userId)
                 .orElse(null);
         if (friend == null){
             return null;
         }
-        return  mapper.convertObjectToUserId(friend.getFriendList().getFriends());
+
+        return Flux.fromIterable(friend.getFriendList().getFriends().stream().map(Friend::getId).collect(Collectors.toList()));
+       // return  mapper.convertObjectToUserId(friend.getFriendList().getFriends());
     }
 
     public void removeFriend(long user1Id, long user2Id) {

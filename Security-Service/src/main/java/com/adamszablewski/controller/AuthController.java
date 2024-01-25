@@ -75,7 +75,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
 
     }
-    
+
     @GetMapping("/validate/token")
     public ResponseEntity<RestResponseDTO<Boolean>> validateToken(@RequestParam("token") String token){
 

@@ -1,7 +1,10 @@
 package com.adamszablewski.model;
 
 import com.adamszablewski.interfaces.Likeable;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Entity
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
+@Entity
 public class Post implements Commentable, Likeable {
     @Id
     private long id;

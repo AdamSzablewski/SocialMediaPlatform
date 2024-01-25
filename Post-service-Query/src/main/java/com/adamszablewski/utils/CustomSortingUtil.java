@@ -10,12 +10,14 @@ import java.util.List;
 @Component
 public class CustomSortingUtil {
 
-    private static final Comparator<Comment> COMPARE_COMMENT_AMOUNT =
+    public static final Comparator<Comment> COMPARE_COMMENT_AMOUNT =
             Comparator.<Comment>comparingInt(c -> c.getAnswers().size()).reversed();
-    private static final Comparator<Comment> COMPARE_LIKE_AMOUNT =
+    public static final Comparator<Comment> COMPARE_LIKE_AMOUNT =
             Comparator.<Comment>comparingInt(c-> c.getLikes().size()).reversed();
-    private static final Comparator<Comment> COMPARE_DATE_TIME =
+    public static final Comparator<Comment> COMPARE_DATE_TIME =
             Comparator.comparing(Comment::getDateTime, Comparator.reverseOrder());
+    public static final Comparator<Post> COMPARE_DATE_TIME_POST =
+            Comparator.comparing(Post::getCreationTime, Comparator.reverseOrder());
 
     public void sortComments(Post post){
 

@@ -5,6 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.security.Key;
 import java.util.Date;
@@ -14,7 +15,7 @@ import static com.adamszablewski.config.SecurityConstant.JWT_SECRET;
 @Component
 public class TokenGenerator {
 
-    public String generateToken(long userId){
+    public String  generateToken(Long userId){
 
         Date currentDate = new Date();
         Date expireDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);

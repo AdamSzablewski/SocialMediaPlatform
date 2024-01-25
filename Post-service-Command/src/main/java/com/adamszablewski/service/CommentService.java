@@ -24,7 +24,6 @@ import java.util.List;
 public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final Dao dao;
     private final KafkaMessagePublisher kafkaMessagePublisher;
 
     @Transactional

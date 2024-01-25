@@ -3,7 +3,6 @@ package adamszablewski;
 import com.adamszablewski.model.Comment;
 import com.adamszablewski.model.Post;
 import com.adamszablewski.model.Upvote;
-import com.adamszablewski.repository.CommentRepository;
 import com.adamszablewski.repository.LikeRepository;
 import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.service.LikeService;

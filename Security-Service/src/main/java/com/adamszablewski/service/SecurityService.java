@@ -25,13 +25,12 @@ public class SecurityService {
     private final JwtUtil jwtUtil;
     private final UserValidator userValidator;
     private final TokenGenerator tokenGenerator;
-    public boolean validateUser(LoginDto loginDto) {
+    public String validateUser(LoginDto loginDto) {
         String response = userServiceClient.getHashedPassword(loginDto.getEmail());
-
         if (!passwordEncoder.matches(loginDto.getPassword(), response)){
             throw new InvalidCredentialsException();
         }
-        return true;
+        return generateToken(loginDto.getEmail());
     }
 
     public boolean validateToken(String token) {

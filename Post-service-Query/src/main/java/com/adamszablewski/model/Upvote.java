@@ -1,5 +1,7 @@
 package com.adamszablewski.model;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.time.LocalDateTime;

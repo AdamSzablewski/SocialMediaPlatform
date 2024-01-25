@@ -7,6 +7,7 @@ import com.adamszablewski.feign.BookingServiceClient;
 import com.adamszablewski.feign.UserServiceClient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
@@ -25,11 +26,7 @@ public class UserValidator {
     }
 
     public boolean isUser(long userId, String userEmail){
-        RestResponseDTO<Boolean> response = userServiceClient.isUser(userId, userEmail);
-        if (response.getValue() == null){
-            throw new MissingFeignValueException();
-        }
-        return response.getValue();
+        return userServiceClient.isUser(userId, userEmail);
 
     }
     public boolean isEmployee(long facilityId, String userEmail){

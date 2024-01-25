@@ -14,6 +14,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,13 +37,12 @@ public class FriendController {
     public ResponseEntity<List<FriendRequest>> getFriendRequestsForUser(@RequestParam(name = "userId") long userId){
         return ResponseEntity.ok(friendService.getFriendRequestsForUser(userId));
     }
-    @GetMapping("/ids")
+    @GetMapping(value = "/ids", produces = "application/json")
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
-    public ResponseEntity<
-    List<Long>> getFriendIdsForUser(@RequestParam(name = "userId") long userId){
+    public Flux<Long> getFriendIdsForUser(@RequestParam(name = "userId") long userId){
         System.out.println("friends |||   "+friendService.getFriendIdsForUser(userId));
-        return ResponseEntity.ok(friendService.getFriendIdsForUser(userId));
+        return friendService.getFriendIdsForUser(userId);
     }
     @GetMapping("/add")
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")

@@ -10,8 +10,11 @@ import com.adamszablewski.utils.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
 import java.util.*;
+
+import static com.adamszablewski.utils.CustomSortingUtil.*;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +23,7 @@ public class FeedService {
     private final static int MAX_FEED_SIZE = 100;
 
     private final PostRepository postRepository;
+
     private final FriendServiceClient friendServiceClient;
     private final CustomSortingUtil feedUtil;
 
@@ -33,6 +37,8 @@ public class FeedService {
         return Mapper.mapPostToDto(feed.getPosts());
 
     }
+
+
 
     /**
      * Updates the users feed by adding new posts from users sorted from the newest to the oldest.
@@ -59,6 +65,7 @@ public class FeedService {
         }
 
     }
+
     private void addPostsForUserIdToList(Feed feed, Collection<Post> newPosts, long userId){
         List<Post> posts = postRepository.getAllByUserId(userId);
         posts.forEach(System.out::println);
@@ -70,8 +77,6 @@ public class FeedService {
         });
 
     }
-
-
 
 
 }

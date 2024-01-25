@@ -6,7 +6,6 @@
 	<modules>
 		<module>User-Service</module>
 		<module>Friend-service</module>
-		<module>Post-service</module>
         <module>Api-Gateway</module>
         <module>Messeging-Service</module>
         <module>Eureka</module>
