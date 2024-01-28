@@ -13,6 +13,7 @@ import com.adamszablewski.util.JwtUtil;
 import com.adamszablewski.util.OtpManager;
 import com.adamszablewski.util.TokenGenerator;
 import com.adamszablewski.util.UserValidator;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,8 +91,11 @@ public class SecurityService {
         kafkaMessagePublisher.sendOTPEventMessage(event);
     }
     public String validateOTP(String oneTimePassword, long userId){
-        boolean isValid =  otpManager.validateOTP(oneTimePassword, userId);
+        Otp otp = otpRepository.findByOtp(oneTimePassword)
+                .orElseThrow(EntityNotFoundException::new);
+        boolean isValid =  otpManager.validateOTP(userId, otp);
         if (isValid){
+            otpRepository.delete(otp);
             return generateToken(userId);
         }else {
             throw new NotAuthorizedException("validation failed");

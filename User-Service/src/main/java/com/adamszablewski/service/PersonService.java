@@ -12,11 +12,8 @@ import com.adamszablewski.utils.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 @Service
 @AllArgsConstructor
-@RequestMapping("/users")
 public class PersonService {
 
     private final PersonRepository personRepository;
@@ -25,9 +22,6 @@ public class PersonService {
     private final SecurityServiceClient securityServiceClient;
     private final KafkaTemplate<String, Long> kafkaTemplate;
     private final KafkaMessagePublisher kafkaMessagePublisher;
-
-
-
     public PersonDto getPerson(long userId) {
         return entityUtils.mapPersonToDto(personRepository.findById(userId)
                 .orElseThrow(NoSuchUserException::new));
@@ -38,10 +32,9 @@ public class PersonService {
     }
     public void deleteUser(Long userId) {
         personRepository.deleteById(userId);
-        kafkaMessagePublisher.snedUserDeletedMessage(userId);
+        kafkaMessagePublisher.sendUserDeletedMessage(userId);
 
     }
-
     public void createUser(Person person) {
         boolean valuesValidated = validator.validatePersonValues(person);
         if (!valuesValidated){
@@ -59,30 +52,30 @@ public class PersonService {
                 .build();
         personRepository.save(newPerson);
     }
-
     public String getUsernameFromId(long userId) {
         Person user = personRepository.findById(userId)
                 .orElseThrow(NoSuchUserException::new);
-        System.out.println("username "+user.getUsername());
         return user.getUsername();
     }
-
-
     public long getUserIdForUsername(String email) {
         Person person = personRepository.findByEmail(email)
                 .orElseThrow(NoSuchUserException::new);
         return person.getId();
     }
-
     public String getHashedPassword(String username) {
         Person person = personRepository.findByEmail(username)
                 .orElseThrow(NoSuchUserException::new);
         return person.getPassword();
     }
-
     public String getPhoneNumber(long userId) {
         Person person = personRepository.findById(userId)
                 .orElseThrow(NoSuchUserException::new);
         return person.getPhoneNumber();
+    }
+    public void resetPassword(String password, long userId) {
+        Person person = personRepository.findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        person.setPassword(password);
+        personRepository.save(person);
     }
 }

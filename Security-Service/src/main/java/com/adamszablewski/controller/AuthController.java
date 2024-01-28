@@ -17,13 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Service
 @AllArgsConstructor
 public class AuthController {
-
-
-    private PasswordEncoder passwordEncoder;
-
-    private TokenGenerator tokenGenerator;
     private SecurityService securityService;
-    private final UserValidator userValidator;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto user){
@@ -40,8 +34,11 @@ public class AuthController {
     }
     @GetMapping("/hash")
     public ResponseEntity<String> hashPassword(@RequestParam(name = "password") String password){
-
         return ResponseEntity.ok(securityService.hashPassword(password));
+    }
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam("otp") String otp, @RequestParam("userId") long userId){
+        return ResponseEntity.ok(securityService.validateOTP(otp, userId));
     }
     @GetMapping("/extract")
     public ResponseEntity<Long> extractUserIdFromToken(@RequestParam(name = "token") String token){
@@ -77,21 +74,8 @@ public class AuthController {
     }
 
     @GetMapping("/validate/token")
-    public ResponseEntity<RestResponseDTO<Boolean>> validateToken(@RequestParam("token") String token){
-
-        String errorMessage = "";
-        boolean validated = false;
-        try {
-            validated = securityService.validateToken(token);
-        }catch (Exception e){
-            errorMessage = e.getMessage();
-        }
-        RestResponseDTO<Boolean> response = RestResponseDTO.<Boolean>builder()
-                .value(validated)
-                .error(errorMessage)
-                .build();
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Boolean> validateToken(@RequestParam("token") String token){
+        return ResponseEntity.ok(securityService.validateToken(token));
     }
 
 

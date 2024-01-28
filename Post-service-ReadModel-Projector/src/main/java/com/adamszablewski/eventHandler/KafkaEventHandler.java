@@ -18,7 +18,6 @@ public class KafkaEventHandler {
 
     @KafkaListener(topics = POST_EVENT_TOPIC, groupId = GROUP)
     public void consumePostEventTopic(PostEvent event){
-        System.out.println("called "+event);
         dao.consumePostEvent(event);
     }
     @KafkaListener(topics = COMMENT_EVENT_TOPIC, groupId = GROUP)

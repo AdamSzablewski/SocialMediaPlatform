@@ -49,8 +49,17 @@ public class PersonController {
     @GetMapping(value = "/password/hashed", produces = MediaType.APPLICATION_JSON_VALUE)
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")
-    public Mono<String> getHashedPassword(@RequestParam("userEmail") String userEmail){
-        return Mono.just(personService.getHashedPassword(userEmail));
+    public ResponseEntity<String> getHashedPassword(@RequestParam("userEmail") String userEmail){
+        return ResponseEntity.ok(personService.getHashedPassword(userEmail));
+    }
+    @PatchMapping("/reset-password")
+    @SecureUserIdResource
+    @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "userServiceRateLimiter")
+    public ResponseEntity<String> resetUserPassword(@RequestParam("password") String password,
+                                                    @RequestParam("userId") long userId){
+        personService.resetPassword(password, userId);
+        return ResponseEntity.ok().build();
     }
     @PostMapping()
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
@@ -60,6 +69,8 @@ public class PersonController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/phoneNumber")
+    @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "userServiceRateLimiter")
     public ResponseEntity<String> getPhoneNumber(@RequestParam long userId){
         return ResponseEntity.ok(personService.getPhoneNumber(userId));
     }
