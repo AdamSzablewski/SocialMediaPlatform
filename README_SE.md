@@ -8,9 +8,9 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
-- **Spring-ramverket** 
+- **Spring-framework**
 - **Kafka:** Hantering av händelser och meddelanden.
-- **Mikrotjänstarkitektur**
+- **Mikrotjänstarkitektur** CQRS arkitektur med Kafka
 - **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade annoteringar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för att begränsad tillstånd där det behövs.
 - **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
 - **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.

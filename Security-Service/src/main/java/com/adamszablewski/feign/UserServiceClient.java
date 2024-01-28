@@ -14,8 +14,10 @@ public interface UserServiceClient {
 
     @GetMapping("/user/password/hashed")
     String getHashedPassword(@RequestParam("userEmail") String userEmail);
-    @GetMapping("/users/{userId}/{userEmail}")
+    @GetMapping("/user/{userId}/{userEmail}")
     boolean isUser(@PathVariable long userId,@PathVariable String userEmail);
     @GetMapping("user/convert")
     Long getUserIdFromUsername(@RequestParam("email") String username);
+    @GetMapping("user/phoneNumber")
+    String getPhoneNumberForUser(@RequestParam("userId") long userId);
 }

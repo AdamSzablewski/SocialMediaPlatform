@@ -5,13 +5,8 @@ import com.adamszablewski.dto.RestResponseDTO;
 import com.adamszablewski.service.SecurityService;
 import com.adamszablewski.util.TokenGenerator;
 import com.adamszablewski.dto.LoginDto;
-import com.adamszablewski.dto.RegisterDto;
 import com.adamszablewski.util.UserValidator;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,10 +29,15 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody LoginDto user){
 
         securityService.validateUser(user);
-        String token = securityService.generateToken(user.getEmail());
+        String token = securityService.generateTokenFromEmail(user.getEmail());
         return ResponseEntity.ok(token);
     }
-
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> getOTP(@RequestParam("phoneNumber") String phoneNumber,
+                                         @RequestParam("userId") long userId){
+        securityService.sendOTP(phoneNumber, userId);
+        return ResponseEntity.ok("One time password sent");
+    }
     @GetMapping("/hash")
     public ResponseEntity<String> hashPassword(@RequestParam(name = "password") String password){
 

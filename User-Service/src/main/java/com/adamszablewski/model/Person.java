@@ -1,4 +1,4 @@
-package com.adamszablewski.classes;
+package com.adamszablewski.model;
 
 import com.adamszablewski.interfaces.Identifiable;
 import jakarta.persistence.Entity;

@@ -1,6 +1,6 @@
 package com.adamszablewski.utils;
 
-import com.adamszablewski.classes.Person;
+import com.adamszablewski.model.Person;
 import com.adamszablewski.exceptions.UserAlreadyExistException;
 import com.adamszablewski.repository.PersonRepository;
 import lombok.AllArgsConstructor;

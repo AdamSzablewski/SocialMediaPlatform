@@ -1,6 +1,6 @@
 package com.adamszablewski.service;
 
-import com.adamszablewski.classes.Person;
+import com.adamszablewski.model.Person;
 import com.adamszablewski.dtos.PersonDto;
 import com.adamszablewski.exceptions.IncompleteDataException;
 import com.adamszablewski.exceptions.NoSuchUserException;
@@ -12,7 +12,6 @@ import com.adamszablewski.utils.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Service
@@ -79,5 +78,11 @@ public class PersonService {
         Person person = personRepository.findByEmail(username)
                 .orElseThrow(NoSuchUserException::new);
         return person.getPassword();
+    }
+
+    public String getPhoneNumber(long userId) {
+        Person person = personRepository.findById(userId)
+                .orElseThrow(NoSuchUserException::new);
+        return person.getPhoneNumber();
     }
 }

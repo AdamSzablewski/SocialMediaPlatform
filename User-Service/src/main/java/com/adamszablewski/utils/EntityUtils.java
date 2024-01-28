@@ -2,7 +2,7 @@ package com.adamszablewski.utils;
 
 
 
-import com.adamszablewski.classes.Person;
+import com.adamszablewski.model.Person;
 import com.adamszablewski.dtos.PersonDto;
 import com.adamszablewski.interfaces.Identifiable;
 import org.springframework.stereotype.Component;

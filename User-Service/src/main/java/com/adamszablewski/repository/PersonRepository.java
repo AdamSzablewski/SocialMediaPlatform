@@ -1,6 +1,6 @@
 package com.adamszablewski.repository;
 
-import com.adamszablewski.classes.Person;
+import com.adamszablewski.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

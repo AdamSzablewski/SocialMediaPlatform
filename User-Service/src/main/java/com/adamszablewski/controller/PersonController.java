@@ -1,7 +1,7 @@
 package com.adamszablewski.controller;
 
 import com.adamszablewski.annotations.SecureUserIdResource;
-import com.adamszablewski.classes.Person;
+import com.adamszablewski.model.Person;
 import com.adamszablewski.dtos.PersonDto;
 import com.adamszablewski.service.PersonService;
 import com.adamszablewski.utils.ExceptionHandler;
@@ -59,7 +59,11 @@ public class PersonController {
         personService.createUser(person);
         return ResponseEntity.ok().build();
     }
-    @DeleteMapping("")
+    @GetMapping("/phoneNumber")
+    public ResponseEntity<String> getPhoneNumber(@RequestParam long userId){
+        return ResponseEntity.ok(personService.getPhoneNumber(userId));
+    }
+    @DeleteMapping()
     @SecureUserIdResource
     @CircuitBreaker(name = "userServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "userServiceRateLimiter")

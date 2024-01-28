@@ -2,17 +2,23 @@ package com.adamszablewski.service;
 
 
 import com.adamszablewski.dto.LoginDto;
-import com.adamszablewski.dto.RestResponseDTO;
+import com.adamszablewski.events.OtpEvent;
 import com.adamszablewski.exception.InvalidCredentialsException;
-import com.adamszablewski.exception.MissingFeignValueException;
 import com.adamszablewski.feign.BookingServiceClient;
 import com.adamszablewski.feign.UserServiceClient;
+import com.adamszablewski.kafka.KafkaMessagePublisher;
+import com.adamszablewski.model.Otp;
+import com.adamszablewski.repository.OtpRepository;
 import com.adamszablewski.util.JwtUtil;
+import com.adamszablewski.util.OtpManager;
 import com.adamszablewski.util.TokenGenerator;
 import com.adamszablewski.util.UserValidator;
+import jakarta.ws.rs.NotAuthorizedException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Service
@@ -25,12 +31,15 @@ public class SecurityService {
     private final JwtUtil jwtUtil;
     private final UserValidator userValidator;
     private final TokenGenerator tokenGenerator;
+    private final KafkaMessagePublisher kafkaMessagePublisher;
+    private final OtpRepository otpRepository;
+    private final OtpManager otpManager;
     public String validateUser(LoginDto loginDto) {
         String response = userServiceClient.getHashedPassword(loginDto.getEmail());
         if (!passwordEncoder.matches(loginDto.getPassword(), response)){
             throw new InvalidCredentialsException();
         }
-        return generateToken(loginDto.getEmail());
+        return generateTokenFromEmail(loginDto.getEmail());
     }
 
     public boolean validateToken(String token) {
@@ -57,8 +66,36 @@ public class SecurityService {
         return jwtUtil.getUserIdFromToken(token);
     }
 
-    public String generateToken(String email) {
+    public String generateTokenFromEmail(String email) {
         long userId = userServiceClient.getUserIdFromUsername(email);
         return tokenGenerator.generateToken(userId);
     }
+    public String generateToken(long userId){
+        return tokenGenerator.generateToken(userId);
+    }
+
+    public void sendOTP(String phoneNumber, long userId) {
+        String userPhoneNumber = userServiceClient.getPhoneNumberForUser(userId);
+        if (!userPhoneNumber.equals(phoneNumber)){
+            throw new NotAuthorizedException("Phone number does not match any account");
+        }
+        String oneTimePassword = otpManager.generateOTP();
+        Otp otp = new Otp(userId, oneTimePassword, LocalDateTime.now());
+        OtpEvent event = OtpEvent.builder()
+                .otp(oneTimePassword)
+                .phoneNumer(phoneNumber)
+                .userId(userId)
+                .build();
+        otpRepository.save(otp);
+        kafkaMessagePublisher.sendOTPEventMessage(event);
+    }
+    public String validateOTP(String oneTimePassword, long userId){
+        boolean isValid =  otpManager.validateOTP(oneTimePassword, userId);
+        if (isValid){
+            return generateToken(userId);
+        }else {
+            throw new NotAuthorizedException("validation failed");
+        }
+    }
+
 }
