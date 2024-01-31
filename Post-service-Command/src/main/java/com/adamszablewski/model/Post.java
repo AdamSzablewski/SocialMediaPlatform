@@ -39,6 +39,7 @@ public class Post implements Commentable, Likeable {
                 ", userId=" + userId +
                 ", text='" + text + '\'' +
                 ", visible=" + visible +
+                ", creation time "+creationTime+
                 ", multimediaId='" + multimediaId + '\'' +
                 ", likes=" + likes +
                 ", description='" + description + '\'' +

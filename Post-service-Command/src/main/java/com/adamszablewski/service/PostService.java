@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @AllArgsConstructor
@@ -72,7 +71,7 @@ public class PostService {
     @Transactional
     public String uploadImageForPost(long userId, MultipartFile image) {
         String multimediaId = uniqueIDServiceClient.getUniqueImageId();
-        imageServiceClient.sendImageToImageService(image, userId, multimediaId);
+        CompletableFuture.runAsync(()-> imageServiceClient.sendImageToImageService(image, userId, multimediaId));
         createHiddenPost(PostType.IMAGE, userId, multimediaId);
         return multimediaId;
     }
@@ -100,24 +99,33 @@ public class PostService {
         return multimediaId;
 
     }
+    @Async
+    @Transactional
     public void createHiddenPost(PostType type, long userId, String multimediaID){
-        Post post = createPost(type, userId);
-        post.setVisible(false);
-        Profile profile = profileRepository.findByUserId(userId)
-                .orElseGet(()-> createProfile(userId));
-        try{
-            if (profile.getPosts() == null){
-                profile.setPosts(new ArrayList<>());
+
+            Post post = createPost(type, userId);
+            post.setVisible(false);
+            Profile profile = profileRepository.findByUserId(userId)
+                    .orElseGet(()-> createProfile(userId));
+            try{
+                if (profile.getPosts() == null){
+                    profile.setPosts(new ArrayList<>());
+                }
+                profile.getPosts().add(post);
+                System.out.println("|||||||   "+post);
+                postRepository.save(post);
+                profileRepository.save(profile);
+                kafkaMessagePublisher.sendPostEventMessage(new PostEvent(EventType.CREATE, post));
+                kafkaMessagePublisher.sendProfileEventMessage(new ProfileEvent(EventType.UPDATE, profile));
+            } catch (Exception e){
+                if (type == PostType.VIDEO){
+                    kafkaMessagePublisher.sendDeletedVideoMessage(multimediaID);
+                }else {
+                    kafkaMessagePublisher.sendDeleteImageMessage(multimediaID);
+                }
+
+                throw new RuntimeException();
             }
-            profile.getPosts().add(post);
-            postRepository.save(post);
-            profileRepository.save(profile);
-            kafkaMessagePublisher.sendPostEventMessage(new PostEvent(EventType.CREATE, post));
-            kafkaMessagePublisher.sendProfileEventMessage(new ProfileEvent(EventType.UPDATE, profile));
-        } catch (Exception e){
-            kafkaMessagePublisher.sendDeletedVideoMessage(multimediaID);
-            throw new RuntimeException();
-        }
 
     }
 

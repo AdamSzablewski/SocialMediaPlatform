@@ -40,8 +40,9 @@ public class PostController {
     @SecureUserIdResource
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
-    public ResponseEntity<String> uploadImageForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
-                                           @RequestParam MultipartFile image) {
+    public ResponseEntity<String> uploadImageForPost(HttpServletRequest servletRequest,
+                                                     @RequestParam(name = "userId") long userId,
+                                                     @RequestParam MultipartFile image) {
         return ResponseEntity.ok(postService.uploadImageForPost(userId, image));
     }
     @PostMapping(value = "/video/upload", produces = MediaType.APPLICATION_JSON_VALUE)

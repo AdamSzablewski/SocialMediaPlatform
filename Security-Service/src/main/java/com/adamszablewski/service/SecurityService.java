@@ -81,7 +81,10 @@ public class SecurityService {
             throw new NotAuthorizedException("Phone number does not match any account");
         }
         String oneTimePassword = otpManager.generateOTP();
-        Otp otp = new Otp(userId, oneTimePassword, LocalDateTime.now());
+        Otp otp = Otp.builder()
+                .otp(oneTimePassword)
+                .dateTime(LocalDateTime.now())
+                .build();
         OtpEvent event = OtpEvent.builder()
                 .otp(oneTimePassword)
                 .phoneNumer(phoneNumber)

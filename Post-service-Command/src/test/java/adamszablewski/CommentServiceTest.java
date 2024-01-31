@@ -1,5 +1,6 @@
 package adamszablewski;
 
+import com.adamszablewski.events.CommentEvent;
 import com.adamszablewski.kafka.KafkaMessagePublisher;
 import com.adamszablewski.model.Comment;
 import com.adamszablewski.model.Post;
@@ -10,6 +11,7 @@ import com.adamszablewski.utils.Dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,15 +24,11 @@ import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureTestDatabase
-@DataJpaTest(properties = "spring.config.name=application-test")
 public class CommentServiceTest {
-
+    @InjectMocks
     CommentService commentService;
     @Mock
     PostRepository postRepository;
@@ -38,12 +36,11 @@ public class CommentServiceTest {
     CommentRepository commentRepository;
     @Mock
     KafkaMessagePublisher kafkaMessagePublisher;
-    @Mock
-    Dao dao;
+
 
     @BeforeEach
-    void setup(){
-        commentService = new CommentService(postRepository, commentRepository, dao, kafkaMessagePublisher);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -68,8 +65,7 @@ public class CommentServiceTest {
 
         assertThat(post.getComments().contains(comment)).isFalse();
         assertThat(post.getComments().contains(comment2)).isTrue();
-        verify(dao).deleteComment(eq(comment));
-
+        verify(kafkaMessagePublisher).sendCommentEventMessage(any(CommentEvent.class));
     }
 
     @Test

@@ -3,18 +3,18 @@
 - [Polski](README_PL.md)
 
 ## Översikt
-Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild- eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner.
+Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner. Appliktationen använder även Twilio fär att skicka SMS till användare i fall som bortglämt läsenord.
 
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
 - **Spring-framework**
-- **Kafka:** Hantering av händelser och meddelanden.
-- **Mikrotjänstarkitektur** 
+- **Kafka:** Hantering av händelser.
+- **Mikrotjänstarkitektur** CQRS arkitektur för att separera read/write funktionalitet för vissa tjänster.
+- **Twilio** Använder Twilio för att skicka sms till användare i situtaioner som bortglämt läsenord.
 - **AOP (Aspektinriktad programmering):** Använder en kombination av aspektinriktad programmering och anpassade annoteringar för att implementera säkerhet på metodnivå, vilket ger stor flexibilitet och enkelhet vid implementering av auktorisation för att begränsad tillstånd där det behövs.
 - **JUnit och Mockito:** Använder JUnit och Mockito för grundlig enhetstestning för att säkerställa mikrotjänsternas pålitlighet.
 - **PostgreSQL:** Hanterar data, inklusive inlägg, videodata och bildinformation samt användarinformation, med PostgreSQL som databashanterningssystem.
-- **Resilience4J:** Säkerställer motståndskraft och robusthet i kommunikationen mellan mikrotjänster genom att inkludera Resilience4J som en brytare.
 
 ## Nyckelfunktioner
 - **Inlägg:** Användare kan skapa och dela video, bild eller textbaserade inlägg med sitt nätverk.
@@ -32,7 +32,6 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 ### Video-Service
 - Video streaming.
 - Lagrar videor.
-- Säkrar användarresurser.
 
 ### Api Gateway
 - Ansvarig för ruttning och vägledning till olika mikrotjänster.
@@ -40,27 +39,34 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ### Security-Service
 - Hanterar autentisering och auktorisation, utfärdar JWT för säker kommunikation.
+- Generar engångslösenord och tar hand om processen vid bortglömt lösenord.
 
 ### User-Service
 - Hanterar användardata, används för lagring och bearbetning av personlig information för användare.
 - Säkrar användarresurser.
 
-### Post-Service
+### Post-Service-Command
+- Ansvarig för "write" funktionaliteten vid inlägg gillningar och kommentarer.
 - Hanterar skapande, gillande och kommentering av inlägg.
+### Post-Service-Read
+- Ansvarig för "read" funktionaliteten vid hämtning av data relaterat till inlägg.
+- Använder en egen databas för optimaliserad prestanda vid hämtning av inlägg.
 - Ansvarig för skapande av flöden baserade på popularitetsmätare för inlägg.
-- Säkrar användarresurser.
-
-
+### Post-Service-ReadModel-Projector
+- Ansvarig för hantering av händelser från Kafka.
+- Ansvarig för "write" funktionaliteten till Post-service-Read's databas.
 ### Image-Service
-- Komprimerar bilder och lagrar dem i PostgreSQL-databasen.
-- Vid hämtning av bilder från databasen dekomprimeras de.
-- Sparar bilder för meddelanden och portföljbilder och svarar med unika bild-ID:n till andra tjänster för senare hämtning.
-
+- Tar hand om komprimering av bilder och sparar dem i Postgre SQL databasen.
 ### Messaging-Service
 - Möjliggör användare att skicka meddelanden, inklusive text och bilder, till varandra.
 - Möjliggör användare att radera meddelanden hos sig själv eller för alla i konversationen
-- Hanterar systemmeddelanden om kommande bok
 
 ### Friend-Service
 - Tar hand om vänförfrågningar med mera. 
 
+### Notification-Service
+- Hanterar händelser från Kafka.
+- Skickar SMS via Twilio till användare.
+
+### UniqueID-Service
+- Genererar unika identifikations nummer som hjälper att sedan hitta båden bilder och video i datbasen.

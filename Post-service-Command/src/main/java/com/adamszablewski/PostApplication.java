@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
-@EnableAsync
 public class PostApplication {
     public static void main(String[] args) {
         SpringApplication.run(PostApplication.class, args);

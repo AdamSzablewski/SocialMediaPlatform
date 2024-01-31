@@ -26,7 +26,7 @@ public class AuthController {
         String token = securityService.generateTokenFromEmail(user.getEmail());
         return ResponseEntity.ok(token);
     }
-    @GetMapping("/reset-password")
+    @GetMapping("/send-otp")
     public ResponseEntity<String> getOTP(@RequestParam("phoneNumber") String phoneNumber,
                                          @RequestParam("userId") long userId){
         securityService.sendOTP(phoneNumber, userId);
