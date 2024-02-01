@@ -29,12 +29,12 @@ public class Mapper {
     }
 
 
-    public static  List<PostDto> mapPostToDto(List<Post> posts) {
+    public  List<PostDto> mapPostToDto(List<Post> posts) {
         return posts.stream()
-                .map(Mapper::mapPostToDto)
+                .map(this::mapPostToDto)
                 .collect(Collectors.toList());
     }
-    public static PostDto mapPostToDto(Post post){
+    public PostDto mapPostToDto(Post post){
         return PostDto.builder()
                 .id(post.getId())
                 .userId(post.getUserId())
@@ -48,7 +48,7 @@ public class Mapper {
                 .description(post.getDescription())
                 .build();
     }
-    public static CommentDto mapCommentToDto(Comment comment){
+    public CommentDto mapCommentToDto(Comment comment){
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
@@ -58,22 +58,22 @@ public class Mapper {
                 .build();
 
     }
-    public static List<CommentDto> mapCommentToDto(List<Comment> comments){
+    public List<CommentDto> mapCommentToDto(List<Comment> comments){
         return comments.stream()
-                .map(Mapper::mapCommentToDto)
+                .map(this::mapCommentToDto)
                 .collect(Collectors.toList());
     }
-    public static UpvoteDto mapUpvoteDto(Upvote upvote){
+    public UpvoteDto mapUpvoteDto(Upvote upvote){
         return UpvoteDto.builder()
                 .userId(upvote.getUserId())
                 .build();
     }
-    public static Set<UpvoteDto> mapUpvoteDto(Set<Upvote> upvotes){
+    public Set<UpvoteDto> mapUpvoteDto(Set<Upvote> upvotes){
         return upvotes.stream()
-                .map(Mapper::mapUpvoteDto)
+                .map(this::mapUpvoteDto)
                 .collect(Collectors.toSet());
     }
-    public static int countLikes(Post post){
+    public int countLikes(Post post){
         return post.getLikes().size();
     }
 

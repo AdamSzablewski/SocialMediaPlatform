@@ -112,7 +112,6 @@ public class PostService {
                     profile.setPosts(new ArrayList<>());
                 }
                 profile.getPosts().add(post);
-                System.out.println("|||||||   "+post);
                 postRepository.save(post);
                 profileRepository.save(profile);
                 kafkaMessagePublisher.sendPostEventMessage(new PostEvent(EventType.CREATE, post));
