@@ -1,29 +1,22 @@
 package adamszablewski;
 
 import com.adamszablewski.dtos.PostDto;
-import com.adamszablewski.feign.FriendServiceClient;
 import com.adamszablewski.model.Comment;
 import com.adamszablewski.model.Post;
 import com.adamszablewski.model.Upvote;
-import com.adamszablewski.repository.PostRepository;
 import com.adamszablewski.service.FeedService;
-import com.adamszablewski.utils.CustomSortingUtil;
 import com.adamszablewski.utils.FeedUtil;
 import com.adamszablewski.utils.Mapper;
-import io.jsonwebtoken.JwsHeader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 

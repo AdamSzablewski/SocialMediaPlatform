@@ -1,6 +1,5 @@
 # Sociala medieapplikation
 - [English](README.md)
-- [Polski](README_PL.md)
 
 ## Översikt
 Sociala medieapplikationen är en plattform som visar upp min kompetens inom Java-utveckling, Spring-ramverket och mikrotjänstarkitektur. Den ger användare möjlighet att dela video, bild eller textinlägg, engagera sig i innehållet genom att kommentera inlägg och andra kommentarer samt gilla innehåll för att påverka dess popularitet. Applikationen tillåter användare att kommunicera med den inbyggda meddelandefunktionen mellan vänner. Appliktationen använder även Twilio fär att skicka SMS till användare i fall som bortglämt läsenord.
