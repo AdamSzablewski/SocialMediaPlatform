@@ -5,8 +5,11 @@ import com.adamszablewski.exceptions.FileNotFoundException;
 import com.adamszablewski.exceptions.NoSuchImageException;
 import com.adamszablewski.exceptions.NotAuthorizedException;
 import com.adamszablewski.feign.BookingClient;
+import com.adamszablewski.feign.UniqueIDServiceClient;
 import com.adamszablewski.model.*;
-import com.adamszablewski.repository.*;
+
+import com.adamszablewski.s3.S3buckets;
+import com.adamszablewski.s3.S3service;
 import com.adamszablewski.util.ImageUtils;
 import com.adamszablewski.util.UniqueIdGenerator;
 import com.adamszablewski.util.UserValidator;
@@ -22,148 +25,32 @@ import java.util.Set;
 @AllArgsConstructor
 public class ImageService {
 
-    private final ImageRepository imageRepository;
-    private final ProfilePhotoRepository profilePhotoRepository;
-    private final MessagePhotoRepository messagePhotoRepository;
-    private final UniqueIdGenerator uniqueIdGenerator;
-    private final UserValidator userValidator;
-    private final BookingClient bookingClient;
-    private final PostPhotoRepository postPhotoRepository;
+    private final S3service s3service;
+    private final S3buckets s3buckets;
+    private final UniqueIDServiceClient uniqueIDServiceClient;
 
-    private ImageData uploadImage(MultipartFile file, String imageId) throws IOException {
-        return imageRepository.save(ImageData.builder()
-                .type(file.getContentType())
-                .name(file.getOriginalFilename())
-                .multimediaId(imageId)
-                .imageData(ImageUtils.compressImage(file.getBytes()))
-                .build());
+    public String upploadImageToS3(MultipartFile file) {
 
-    }
-    private ImageData uploadImage(byte[] imageData,String imageId) throws IOException {
-        return imageRepository.save(ImageData.builder()
-                .type("image/jpeg")
-                .multimediaId(imageId)
-                .imageData(ImageUtils.compressImage(imageData))
-                .build());
-
-    }
-    @Transactional
-    public byte[] getImageForUser(long id) {
-        ProfilePhoto profilePhoto = profilePhotoRepository.findByUserId(id)
-                .orElseThrow(FileNotFoundException::new);
-        byte[] imageData = profilePhoto.getImage().getImageData();
-        return ImageUtils.decompressImage(imageData);
-    }
-    @Transactional
-    public void addUserImage(long id, MultipartFile file, String userEmail) throws IOException {
-
-        if (!userValidator.isUser(id, userEmail)){
-            throw new NotAuthorizedException();
+        String imageId = uniqueIDServiceClient.getUniqueImageId();
+        if(imageId.length() == 0){
+            throw new RuntimeException("Wrong imageID");
         }
-        profilePhotoRepository.deleteByUserId(id);
-        String imageId = uniqueIdGenerator.generateUniqueImageId();
-        ImageData image = uploadImage(file, imageId);
-        ProfilePhoto profilePhoto = ProfilePhoto.builder()
-                .userId(id)
-                .image(image)
-                .build();
-        profilePhotoRepository.save(profilePhoto);
-    }
-    @Transactional
-    public void deleteImagesForUser(long userId) {
-        postPhotoRepository.deleteAllByUserId(userId);
-        profilePhotoRepository.deleteByUserId(userId);
-    }
-    @Transactional
-    public void deleteUserImage(long id, String userEmail) {
-        if (!userValidator.isUser(id, userEmail)){
-            throw new NotAuthorizedException();
+        try {
+            s3service.putObject(s3buckets.getCustomer(),
+                    imageId,
+                    file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        profilePhotoRepository.deleteByUserId(id);
-
-    }
-    @Transactional
-    public String addMessageImage(byte[] file, Set<Long> recipients) throws IOException {
-
-
-        String imageId = uniqueIdGenerator.generateUniqueImageId();
-        ImageData image = uploadImage(file, imageId);
-        MessagePhoto messagePhoto = MessagePhoto.builder()
-                .users(recipients)
-                .multimediaId(imageId)
-                .image(image)
-                .build();
-        messagePhotoRepository.save(messagePhoto);
         return imageId;
     }
-    @Transactional
-    public byte[] getImageForMessage(String imageId, long userId) {
-        MessagePhoto messagePhoto = messagePhotoRepository.findByMultimediaId(imageId)
-                .orElseThrow(FileNotFoundException::new);
-        if (messagePhoto.getUsers().stream().noneMatch(id -> messagePhoto.getUsers().contains(userId))){
-            throw new NotAuthorizedException();
-        }
-        return ImageUtils.decompressImage(messagePhoto.getImage());
+    public byte[] getImageByImageIdS3(String imageId) {
+        return s3service.getObject(s3buckets.getCustomer(), imageId);
     }
 
-    @Transactional
-    public String addPostImage(byte[] imageArray, long userId) throws IOException {
-//        if(!userValidator.isOwner(facilityId, userEmail)){
-//            throw new NotAuthorizedException();
-//        }
-
-        String imageId = uniqueIdGenerator.generateUniqueImageId();
-        ImageData image = uploadImage(imageArray, imageId);
-        PostPhoto postPhoto = PostPhoto.builder()
-                .userId(userId)
-                .image(image)
-                .multimediaId(imageId)
-                .build();
-
-        postPhotoRepository.save(postPhoto);
-        return imageId;
-    }
-
-    public void removePostImage(long postId) {
-        postPhotoRepository.deleteByPostId(postId);
-    }
-   
-
-    @Transactional
-    public void delteImageWithMultimediaId(String multimediaId) {
-        imageRepository.deleteByMultimediaId(multimediaId);
-        messagePhotoRepository.deleteByMultimediaId(multimediaId);
-        postPhotoRepository.deleteByMultimediaId(multimediaId);
-        profilePhotoRepository.deleteByMultimediaId(multimediaId);
-
-    }
-
-    public long getOwnerForMultimediaId(String multimediaId) {
-        ImageData imageData = imageRepository.findByMultimediaId(multimediaId)
-                .orElseThrow(NoSuchImageException::new);
-        return imageData.getUserId();
-    }
     @Transactional
     public void deleteUserData(Long userId) {
-        postPhotoRepository.deleteAllByUserId(userId);
-        postPhotoRepository.deleteAllByUserId(userId);
-        profilePhotoRepository.deleteAllByUserId(userId);
-        imageRepository.deleteAllByUserId(userId);
+        //todo implement this
     }
 
-    public void addImage(MultipartFile image, long userId, String multimediaID) throws IOException {
-        ImageData imageData = ImageData.builder()
-                .imageData(image.getBytes())
-                .type(image.getContentType())
-                .userId(userId)
-                .multimediaId(multimediaID)
-                .build();
-        imageRepository.save(imageData);
-    }
-    @Transactional
-    public byte[] getImageByImageId(String imageId) {
-        ImageData imageData = imageRepository.findByMultimediaId(imageId)
-                .orElseThrow(NoSuchImageException::new);
-        return imageData.getImageData();
-    }
 }

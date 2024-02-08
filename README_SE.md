@@ -7,6 +7,7 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
+- **AWS s3** För hantering av bild-data.
 - **Spring-framework**
 - **Kafka:** Hantering av händelser.
 - **Mikrotjänstarkitektur** CQRS arkitektur för att separera read/write funktionalitet för vissa tjänster.

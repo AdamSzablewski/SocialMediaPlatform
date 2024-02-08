@@ -30,8 +30,4 @@ public class Friend implements Identifiable, UserResource {
                 '}';
     }
 
-//    @Override
-//    public long getUserId() {
-//        return userId;
-//    }
 }

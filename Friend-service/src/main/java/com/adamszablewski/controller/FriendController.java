@@ -1,5 +1,6 @@
 package com.adamszablewski.controller;
 
+import com.adamszablewski.annotations.SecureUserIdResource;
 import com.adamszablewski.classes.Friend;
 import com.adamszablewski.classes.FriendRequest;
 import com.adamszablewski.dtos.FriendListDto;
@@ -26,18 +27,21 @@ import java.util.Set;
 public class FriendController {
     private final FriendService friendService;
     @GetMapping()
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public ResponseEntity<FriendListDto> getFriendsForUser(@RequestParam(name = "userId") long userId){
         return ResponseEntity.ok(friendService.getFriendsForUser(userId));
     }
     @GetMapping("/requests")
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public ResponseEntity<List<FriendRequest>> getFriendRequestsForUser(@RequestParam(name = "userId") long userId){
         return ResponseEntity.ok(friendService.getFriendRequestsForUser(userId));
     }
     @GetMapping(value = "/ids", produces = "application/json")
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public Flux<Long> getFriendIdsForUser(@RequestParam(name = "userId") long userId){
@@ -45,6 +49,7 @@ public class FriendController {
         return friendService.getFriendIdsForUser(userId);
     }
     @GetMapping("/add")
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public ResponseEntity<Set<Friend>> sendFriendRequest(@RequestParam(name = "userId") long userId,
@@ -53,6 +58,7 @@ public class FriendController {
         return ResponseEntity.ok().build() ;
     }
     @GetMapping("/answere")
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public ResponseEntity<Set<Friend>> respondToFriendRequest(@RequestParam(name = "friendRequestId") long friendRequestId,
@@ -61,6 +67,7 @@ public class FriendController {
         return ResponseEntity.ok().build() ;
     }
     @GetMapping("/remove")
+    @SecureUserIdResource
     @CircuitBreaker(name = "friendServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "friendServiceRateLimiter")
     public ResponseEntity<String> removeFriend(@RequestParam(name = "userId") long userId,
@@ -70,7 +77,6 @@ public class FriendController {
     }
 
     public  ResponseEntity<?> fallBackMethod(Throwable throwable){
-        System.out.println("cb called");
         return CustomExceptionHandler.handleException(throwable);
     }
 }

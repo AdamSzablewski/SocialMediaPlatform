@@ -1,10 +1,6 @@
 package com.adamszablewski;
 
-import com.adamszablewski.dto.LoginDto;
-import com.adamszablewski.dto.RestResponseDTO;
-import com.adamszablewski.feign.UserServiceClient;
 import com.adamszablewski.security.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @AllArgsConstructor

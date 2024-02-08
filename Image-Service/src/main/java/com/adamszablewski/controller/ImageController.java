@@ -22,100 +22,28 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @GetMapping()
+
+    @GetMapping("/s3")
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<byte[]> getImageByImageId(@RequestParam("multimediaId") String imageId)
+    public ResponseEntity<byte[]> getImageByImageIdFromS3(@RequestParam("multimediaId") String imageId)
     {
-        byte[] imageData = imageService.getImageByImageId(imageId);
+        byte[] imageData = imageService.getImageByImageIdS3(imageId);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(imageData);
     }
 
-    @PostMapping()
+    @PostMapping(value = "/s3", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> addPostImage(@RequestBody byte[] imageArray,
-                                               @RequestParam(name="userId") long userId) throws IOException
-    //@RequestHeader("userEmail") String userEmail) throws IOException
-                                                                {
-        String imageId = imageService.addPostImage(imageArray, userId);
+    public ResponseEntity<String> upploadImageToS3(@RequestParam("file") MultipartFile file)
+    {
+        String imageId = imageService.upploadImageToS3(file);
         return ResponseEntity.ok(imageId);
     }
-    @DeleteMapping()
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> removePostImage(@RequestParam("postId") long postId)
-    {
-        imageService.removePostImage(postId);
-        return ResponseEntity.ok().build();
-    }
-    @GetMapping("/owner/{multimediaId}")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<Long> getOwnerForMultimediaId(@PathVariable() String multimediaId)
-    {
-        return ResponseEntity.ok(imageService.getOwnerForMultimediaId(multimediaId));
-    }
-    @PostMapping("/message")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> addMessageImage(@RequestBody byte[] imageData,
-                                                  @RequestParam("recipients")Set<Long> recipients) throws IOException {
-        String imageId = imageService.addMessageImage(imageData, recipients);
-        return ResponseEntity.ok(imageId);
-    }
-    @PostMapping("/upload/file")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> addImage(@RequestPart("image") MultipartFile image,
-                                           @RequestParam("userId") long userId,
-                                           @RequestParam("multimediaId") String multimediaID) throws IOException {
-        imageService.addImage(image, userId, multimediaID);
-        return ResponseEntity.ok().build();
-    }
-    @GetMapping("/message/id/{imageId}/user/{userId}")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<?> getMessageImage(@PathVariable String imageId, @PathVariable long userId) throws IOException {
-        byte[] data = imageService.getImageForMessage(imageId, userId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(data);
-    }
-
-    @GetMapping("/userId/{id}")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<?> getImageForUser(@PathVariable long id) throws IOException {
-        byte[] data = imageService.getImageForUser(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(data);
-    }
-
-    @PostMapping("/userID/{id}")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> addUserImage(@RequestParam("image")MultipartFile file,
-                                                                    @PathVariable long id,
-                                                                @RequestHeader("userEmail") String userEmail) throws IOException {
-        imageService.addUserImage(id, file, userEmail);
-        return ResponseEntity.ok().build();
-    }
-    @DeleteMapping("/userID/{id}")
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> deleteUserImage(@PathVariable long id,
-                                                                @RequestHeader("userEmail") String userEmail) throws IOException {
-        imageService.deleteUserImage(id, userEmail);
-        return ResponseEntity.ok().build();
-    }
-
 
     public  ResponseEntity<?> fallBackMethod(Throwable throwable){
-        System.out.println("cb called");
         return CustomExceptionHandler.handleException(throwable);
     }
 }

@@ -41,20 +41,7 @@ public class JwtUtil {
                 .uri("/validateToken?token=" + token)
                 .retrieve()
                 .bodyToMono(Boolean.class)
-                .onErrorReturn(false); // Default to false in case of errors
-
-        // Handle the result using reactive programming constructs, or block if necessary.
-
-//        try {
-//
-//            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
-//        } catch (ExpiredJwtException e) {
-//            throw new RuntimeException("JWT has expired");
-//        } catch (MalformedJwtException e) {
-//            throw new RuntimeException("JWT is malformed or has an invalid signature");
-//        } catch (Exception e) {
-//            throw new RuntimeException("JWT validation failed: " + e.getMessage());
-//        }
+                .onErrorReturn(false);
     }
 
     private Key getSigningKey() {
