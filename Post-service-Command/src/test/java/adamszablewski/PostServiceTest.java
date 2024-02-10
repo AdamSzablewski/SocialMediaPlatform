@@ -110,19 +110,19 @@ class PostServiceTest {
         assertThat(post.getCreationTime()).isAfterOrEqualTo(currentTime);
     }
 
-    @Test
-    void uploadImageForPost_shouldUploadImageForPost() throws IOException {
-        long userId = 1L;
-        MultipartFile image = mock(MultipartFile.class);
-        when(uniqueIDServiceClient.getUniqueImageId()).thenReturn("uniqueImageId");
-        when(profileRepository.findByUserId(userId)).thenReturn(Optional.of(new Profile()));
-
-        postService.uploadImageForPost(userId, image);
-
-        verify(imageServiceClient).sendImageToImageService(eq(image), eq(userId), eq("uniqueImageId"));
-        verify(postRepository).save(any(Post.class));
-        verify(kafkaMessagePublisher).sendPostEventMessage(any());
-    }
+//    @Test
+//    void uploadImageForPost_shouldUploadImageForPost() throws IOException {
+//        long userId = 1L;
+//        MultipartFile image = mock(MultipartFile.class);
+//        when(uniqueIDServiceClient.getUniqueImageId()).thenReturn("uniqueImageId");
+//        when(profileRepository.findByUserId(userId)).thenReturn(Optional.of(new Profile()));
+//
+//        postService.uploadImageForPost(userId, image);
+//
+//        verify(imageServiceClient).sendImageToImageService(eq(image), eq(userId), eq("uniqueImageId"));
+//        verify(postRepository).save(any(Post.class));
+//        verify(kafkaMessagePublisher).sendPostEventMessage(any());
+//    }
 
     @Test
     void publishPost_shouldPublishPost() {

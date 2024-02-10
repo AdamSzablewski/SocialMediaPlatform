@@ -13,8 +13,6 @@ public interface ImageServiceClient {
     String sendImageToImageServiceAndGetImageId(@RequestBody byte[] imageData, @RequestParam("userId") long userId);
     @GetMapping("/images/owner/{multimediaId}")
     long getOwnerForMultimediaId(@PathVariable long multimediaId);
-    @PostMapping(value = "/images/upload/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    void sendImageToImageService(@RequestPart("image") MultipartFile image,
-                                 @RequestParam("userId") long userId,
-                                 @RequestParam("multimediaId") String multimediaID);
+    @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    void sendImageToImageService(@RequestPart("image") MultipartFile image, @RequestParam("userId") long userId);
 }

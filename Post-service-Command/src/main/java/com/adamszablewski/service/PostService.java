@@ -71,7 +71,7 @@ public class PostService {
     @Transactional
     public String uploadImageForPost(long userId, MultipartFile image) {
         String multimediaId = uniqueIDServiceClient.getUniqueImageId();
-        CompletableFuture.runAsync(()-> imageServiceClient.sendImageToImageService(image, userId, multimediaId));
+        CompletableFuture.runAsync(()-> imageServiceClient.sendImageToImageService(image, userId));
         createHiddenPost(PostType.IMAGE, userId, multimediaId);
         return multimediaId;
     }
