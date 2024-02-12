@@ -1,4 +1,4 @@
-[# Sociala medieapplikation
+# Sociala medieapplikation 
 - [English](README.md)
 
 ## Översikt
