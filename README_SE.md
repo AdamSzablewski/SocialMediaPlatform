@@ -7,7 +7,7 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
-- **AWS s3** För hantering av bild-data.
+- **AWS s3** För lagring av bild-data.
 - **Spring-framework**
 - **Kafka:** Hantering av händelser.
 - **Mikrotjänstarkitektur** CQRS arkitektur för att separera read/write funktionalitet för vissa tjänster.
@@ -30,43 +30,55 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 ## Mikrotjänster
 
 ### Video-Service
-- Video streaming.
-- Lagrar videor.
+Ansvarar för hantering av videoinlägg och videostreaming. Denna tjänst tillhandahåller funktionalitet för att ladda upp,
+lagra och strömma videor till användarna.
+
+### Image-Service
+Ansvarar för lagring av bilddata i AWS S3. Denna tjänst möjliggör uppladdning, lagring och hämtning av bilder för användare 
+i applikationen. Genom att använda AWS S3 som lagringsplats för bilddata, möjliggör den effektiv hantering och snabb åtkomst 
+till bilder i applikationen.
 
 ### Api Gateway
-- Ansvarig för ruttning och vägledning till olika mikrotjänster.
-- Validerar inkommande förfrågningar genom Security-Service.
+Ansvarar för ruttning och vägledning till olika mikrotjänster. Dessutom ansvarar den för att validera inkommande 
+förfrågningar genom Security-Service för att säkerställa att endast behöriga användare har tillgång till skyddade resurser.
 
 ### Security-Service
-- Hanterar autentisering och auktorisation, utfärdar JWT för säker kommunikation.
-- Generar engångslösenord och tar hand om processen vid bortglömt lösenord.
+Ansvarar för autentisering och auktorisation av användare. Denna tjänst utfärdar JWT för säker kommunikation och ger ett lager
+av säkerhet för att skydda applikationens resurser från obehörig åtkomst. Dessutom hanterar den processen vid bortglömt 
+lösenord genom att generera engångslösenord och hjälpa användare att återställa sina konton.
 
 ### User-Service
-- Hanterar användardata, används för lagring och bearbetning av personlig information för användare.
-- Säkrar användarresurser.
+Ansvarar för hantering av användardata och personlig information. Denna tjänst används för att registrera användare, lagra
+deras personliga information och säkerställa att användarresurser är skyddade och åtkomliga endast för behöriga användare.
 
 ### Post-Service-Command
-- Ansvarig för "write" funktionaliteten vid inlägg gillningar och kommentarer.
-- Hanterar skapande, gillande och kommentering av inlägg.
-### Post-Service-Read
-- Ansvarig för "read" funktionaliteten vid hämtning av data relaterat till inlägg.
-- Använder en egen databas för optimaliserad prestanda vid hämtning av inlägg.
-- Ansvarig för skapande av flöden baserade på popularitetsmätare för inlägg.
+Ansvarar för "write" funktionaliteten för inlägg, gillanden och kommentarer. Denna tjänst hanterar skapande, gillande och 
+kommentering av inlägg samt genomför de nödvändiga åtgärderna för att uppdatera databasen med dessa ändringar. Dessutom 
+skickar den händelser via Kafka för att meddela andra delar av systemet om förändringar och uppdateringar relaterade till 
+inlägg och interaktioner från användare. Genom att använda Kafka för händelsebaserad kommunikation säkerställer denna tjänst 
+att andra delar av systemet kan reagera på dessa händelser i realtid och vidta lämpliga åtgärder, såsom uppdatering av läsmodellen 
+eller notifiering av användare om nya aktiviteter.
+
 ### Post-Service-ReadModel-Projector
-- Ansvarig för hantering av händelser från Kafka.
-- Ansvarig för "write" funktionaliteten till Post-service-Read's databas.
-### Image-Service
-- Tar hand om komprimering av bilder och sparar dem i Postgre SQL databasen.
+Ansvarar för att hantera händelser från Kafka och uppdatera databasen med nya data. Denna tjänst arbetar i bakgrunden för
+att upprätthålla konsistens mellan olika delar av systemet och säkerställa att uppdateringar och ändringar reflekteras korrekt 
+i databasen.
+
+### Post-Service-Read
+Ansvarar för "read" funktionaliteten för inlägg och hämtning av relaterad data. Denna tjänst använder en egen databas för 
+att optimera prestandan vid hämtning av inlägg och skapar flöden baserade på popularitetsmätare för att presentera relevant innehåll för användarna.
+
 ### Messaging-Service
-- Möjliggör användare att skicka meddelanden, inklusive text och bilder, till varandra.
-- Möjliggör användare att radera meddelanden hos sig själv eller för alla i konversationen
+Ansvarar för att möjliggöra kommunikation mellan användare genom text- och bildmeddelanden. Denna tjänst gör det möjligt 
+för användare att skicka meddelanden till varandra och håller koll på konversationer och meddelanden.
 
 ### Friend-Service
-- Tar hand om vänförfrågningar med mera. 
+Ansvarar för hantering av vänförfrågningar och vänrelationer. Denna tjänst gör det möjligt för användare att skicka och 
+acceptera vänförfrågningar, vilket utvidgar deras sociala nätverk och möjliggör interaktion med andra användare i applikationen.
 
 ### Notification-Service
-- Hanterar händelser från Kafka.
-- Skickar SMS via Twilio till användare.
+Ansvarar för att hantera händelser från Kafka och skicka SMS via Twilio till användare. Denna tjänst notifierar användare
+om viktiga händelser i applikationen, såsom nya meddelanden, vänförfrågningar och bortglömda lösenord.
 
 ### UniqueID-Service
-- Genererar unika identifikations nummer som hjälper att sedan hitta båden bilder och video i datbasen.
+Genererar unika identifikations nummer som hjälper att sedan hitta båden bilder och video i datbasen.

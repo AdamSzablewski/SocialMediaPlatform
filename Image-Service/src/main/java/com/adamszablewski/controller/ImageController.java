@@ -42,11 +42,21 @@ public class ImageController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> updateProfilePhoto(@RequestParam("file") MultipartFile file,
-                                                      @RequestParam("userId") long userId,
-                                                     @RequestParam("multimediaId") String multimediaId)
+    public ResponseEntity<String> updateProfilePhoto(@RequestParam("image") MultipartFile image,
+                                                      @RequestParam("userId") long userId)
     {
-        String imageId = imageService.createPhotoResource(file, userId, multimediaId);
+        String imageId = imageService.createPhotoResource(image, userId);
+        return ResponseEntity.ok(imageId);
+    }
+    @PostMapping(value = "/upload/upload/multimediaId/{multimediaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
+    @RateLimiter(name = "imageServiceRateLimiter")
+    public ResponseEntity<String> updateProfilePhoto(@RequestParam("image") MultipartFile image,
+                                                     @RequestParam("userId") long userId,
+                                                     @PathVariable String multimediaId)
+
+    {
+        String imageId = imageService.createPhotoResource(image, userId, multimediaId);
         return ResponseEntity.ok(imageId);
     }
 
