@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "SECURITY-SERVICE")
 public interface SecurityServiceClient {
-
+    @GetMapping("security/token")
     long extractUserIdFromToken(@RequestParam("token") String token);
 }

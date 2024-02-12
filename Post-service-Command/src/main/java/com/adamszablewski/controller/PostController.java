@@ -50,7 +50,7 @@ public class PostController {
     @CircuitBreaker(name = "postServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "postServiceRateLimiter")
     public String uploadVideoForPost(HttpServletRequest servletRequest, @RequestParam(name = "userId") long userId,
-                                           @RequestParam MultipartFile video) throws IOException {
+                                           @RequestParam("video") MultipartFile video) throws IOException {
         return postService.uploadVideoForPost(userId, video);
     }
     @PutMapping("/image")

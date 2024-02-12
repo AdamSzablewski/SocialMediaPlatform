@@ -8,7 +8,6 @@ import com.adamszablewski.dtos.FriendListDto;
 import com.adamszablewski.exceptions.NoFriendRequestException;
 import com.adamszablewski.exceptions.NoSuchUserException;
 import com.adamszablewski.feign.UserServiceClient;
-import com.adamszablewski.rabbitMq.RabbitMqProducer;
 import com.adamszablewski.repository.FriendListRepository;
 import com.adamszablewski.repository.FriendRepository;
 import com.adamszablewski.repository.FriendRequestRepository;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 
 public class FriendService {
     private final FriendRepository friendRepository;
-    private final RabbitMqProducer rabbitMqProducer;
     private final FriendRequestRepository friendRequestRepository;
     private final FriendListRepository friendListRepository;
     private final UserServiceClient userServiceClient;
@@ -113,7 +111,7 @@ public class FriendService {
                 .build();
 
 
-        rabbitMqProducer.sendFriendRequest(friendRequest);
+       // rabbitMqProducer.sendFriendRequest(friendRequest);
         friendRequestRepository.save(friendRequest);
     }
 
@@ -122,14 +120,15 @@ public class FriendService {
         friendRequest.setStatus(FriendRequestStatus.ACCEPTED);
 
         friendRequestRepository.save(friendRequest);
-        rabbitMqProducer.sendFriendRequest(friendRequest);
+       // rabbitMqProducer.sendFriendRequest(friendRequest);
+        //todo kafka
     }
 
     private void declineFriendRequest(FriendRequest friendRequest) {
         addFriend(friendRequest.getReceiverId(), friendRequest.getSenderId());
         friendRequest.setStatus(FriendRequestStatus.DECLINED);
 
-        rabbitMqProducer.sendFriendRequest(friendRequest);
+       // rabbitMqProducer.sendFriendRequest(friendRequest);
         friendRequestRepository.save(friendRequest);
     }
 

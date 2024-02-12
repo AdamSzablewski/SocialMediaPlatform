@@ -29,9 +29,11 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Mikrotjänster
 
-### Video-Service
-Ansvarar för hantering av videoinlägg och videostreaming. Denna tjänst tillhandahåller funktionalitet för att ladda upp,
-lagra och strömma videor till användarna.
+### Video-Service med AWS S3 och CloudFront
+Uppladdning: Användare laddar upp videofiler till Video-Service via gränssnitt/API.
+Lagring: Videofiler sparas i AWS S3 för skalbar lagring och säkerhet.
+Strömning: CloudFront används för att effektivt strömma videor till användare med låg latenstid.
+
 
 ### Image-Service
 Ansvarar för lagring av bilddata i AWS S3. Denna tjänst möjliggör uppladdning, lagring och hämtning av bilder för användare 

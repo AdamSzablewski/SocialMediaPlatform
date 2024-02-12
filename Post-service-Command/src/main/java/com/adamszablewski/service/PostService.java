@@ -95,7 +95,8 @@ public class PostService {
         kafkaMessagePublisher.sendPostEventMessage(new PostEvent(EventType.UPDATE, post));
     }
     public String uploadVideoForPost(long userId, MultipartFile video) {
-        String multimediaId = videoServiceClient.sendImageToImageServiceAndGetImageId(video, userId);
+        String multimediaId = uniqueIDServiceClient.getUniqueVideoId();
+        videoServiceClient.sendVideoToVideoService(video, userId, multimediaId);
         createHiddenPost(PostType.VIDEO,userId, multimediaId);
         return multimediaId;
 

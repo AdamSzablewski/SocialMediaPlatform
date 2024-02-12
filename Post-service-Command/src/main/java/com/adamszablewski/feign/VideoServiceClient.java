@@ -13,6 +13,10 @@ public interface VideoServiceClient {
     String sendImageToImageServiceAndGetImageId(@RequestParam("file") byte[] videoData, @RequestParam("contentType") String contentType, long userId);
     @PostMapping(value = "/video/upload/file",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     String sendImageToImageServiceAndGetImageId(@RequestPart("video") MultipartFile video,@RequestParam("userId") long userId);
+    @PostMapping(value = "/video/upload/s3",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    String sendVideoToVideoService(@RequestPart("video") MultipartFile video,@RequestParam("userId") long userId,@RequestParam("multimediaId") String multimediaId);
+//    @PostMapping(value = "/video/upload/s3",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    String sendVideoToVideoService(@RequestPart("video") MultipartFile video,@RequestParam("userId") long userId);
     @GetMapping("/images/owner/{multimediaId}")
     long getOwnerForMultimediaId(@PathVariable long multimediaId);
     @PostMapping(value = "/video/upload/file",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
