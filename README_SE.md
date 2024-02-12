@@ -1,4 +1,4 @@
-# Sociala medieapplikation
+[# Sociala medieapplikation
 - [English](README.md)
 
 ## Översikt
@@ -7,7 +7,7 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 
 ## Använda teknologier
 - **Java:** Det primära programmeringsspråket.
-- **AWS s3** För lagring av bild-data.
+- **AWS S3 och CloudFront:** För lagring och strömning av videor och bilder.
 - **Spring-framework**
 - **Kafka:** Hantering av händelser.
 - **Mikrotjänstarkitektur** CQRS arkitektur för att separera read/write funktionalitet för vissa tjänster.
@@ -30,15 +30,18 @@ Sociala medieapplikationen är en plattform som visar upp min kompetens inom Jav
 ## Mikrotjänster
 
 ### Video-Service med AWS S3 och CloudFront
-Uppladdning: Användare laddar upp videofiler till Video-Service via gränssnitt/API.
-Lagring: Videofiler sparas i AWS S3 för skalbar lagring och säkerhet.
-Strömning: CloudFront används för att effektivt strömma videor till användare med låg latenstid.
+Video-Service ansvarar för både uppladdning och strömning av videofiler med hjälp av AWS S3 för lagring och CloudFront för effektiv strömning till användare.
+
+Uppladdning: Användare laddar upp videofiler till Video-Service via gränssnitt eller API, där de säkert och skalbart lagras i AWS S3.
+Strömning: CloudFront används för att effektivt strömma videor till användare med låg latenstid och hög prestanda. Detta säkerställer en 
+smidig och snabb upplevelse för användare som tittar på videor i applikationen.
 
 
-### Image-Service
-Ansvarar för lagring av bilddata i AWS S3. Denna tjänst möjliggör uppladdning, lagring och hämtning av bilder för användare 
-i applikationen. Genom att använda AWS S3 som lagringsplats för bilddata, möjliggör den effektiv hantering och snabb åtkomst 
-till bilder i applikationen.
+### Image-Service med AWS S3 och CloudFront
+Image-Service ansvarar för lagring av bilddata i AWS S3 och användning av CloudFront för att leverera bilder till användare
+i applikationen. Genom att använda AWS S3 som lagringsplats möjliggör tjänsten effektiv hantering och snabb åtkomst till bilder. 
+CloudFront används för att förbättra prestandan och tillhandahålla snabbare åtkomst till bilderna genom cachning och distribution 
+från närliggande servrar. Tillsammans möjliggör detta en smidig uppladdning, lagring och hämtning av bilder för användarna i applikationen.
 
 ### Api Gateway
 Ansvarar för ruttning och vägledning till olika mikrotjänster. Dessutom ansvarar den för att validera inkommande 
@@ -83,4 +86,4 @@ Ansvarar för att hantera händelser från Kafka och skicka SMS via Twilio till 
 om viktiga händelser i applikationen, såsom nya meddelanden, vänförfrågningar och bortglömda lösenord.
 
 ### UniqueID-Service
-Genererar unika identifikations nummer som hjälper att sedan hitta båden bilder och video i datbasen.
+Genererar unika identifikations nummer som hjälper att sedan hitta båden bilder och video i datbasen.]([]())

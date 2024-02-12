@@ -19,43 +19,21 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @GetMapping()
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<byte[]> getImageByImageIdFromS3(@RequestParam("multimediaId") String imageId)
-    {
-        byte[] imageData = imageService.getImageByImageIdS3(imageId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageData);
-    }
-
-    @PostMapping(value = "/s3", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
-    @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> upploadImageToS3(@RequestParam("file") MultipartFile file,
-                                                    @RequestParam("multimediaId") String multimediaId)
-    {
-        String imageId = imageService.upploadImageToS3(file, multimediaId);
-        return ResponseEntity.ok(imageId);
-    }
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> updateProfilePhoto(@RequestParam("image") MultipartFile image,
+    public ResponseEntity<String> createPhotoResource(@RequestParam("image") MultipartFile image,
                                                       @RequestParam("userId") long userId)
     {
         String imageId = imageService.createPhotoResource(image, userId);
         return ResponseEntity.ok(imageId);
     }
-    @PostMapping(value = "/upload/upload/multimediaId/{multimediaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload/multimediaId/{multimediaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CircuitBreaker(name = "imageServiceCircuitBreaker", fallbackMethod = "fallBackMethod")
     @RateLimiter(name = "imageServiceRateLimiter")
-    public ResponseEntity<String> updateProfilePhoto(@RequestParam("image") MultipartFile image,
+    public ResponseEntity<String> createPhotoResource(@RequestParam("image") MultipartFile image,
                                                      @RequestParam("userId") long userId,
-                                                     @PathVariable String multimediaId)
-
-    {
+                                                     @PathVariable String multimediaId){
         String imageId = imageService.createPhotoResource(image, userId, multimediaId);
         return ResponseEntity.ok(imageId);
     }

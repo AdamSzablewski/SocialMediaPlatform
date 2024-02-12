@@ -38,9 +38,6 @@ public class ImageService {
         }
         return multimediaId;
     }
-    public byte[] getImageByImageIdS3(String imageId) {
-        return s3service.getObject(s3buckets.getCustomer(), imageId);
-    }
 
     @Transactional
     public void deleteUserData(Long userId) {
@@ -48,18 +45,14 @@ public class ImageService {
     }
 
     public String createPhotoResource(MultipartFile file, long userId) {
-        Photo photo = photoRepository.findByUserId(userId)
-                .orElseGet(() -> createPhoto(userId));
-
-        String multimediaId = uniqueIDServiceClient.getUniqueImageId();
-        upploadImageToS3(file, multimediaId);
-        photo.setMultimediaId(multimediaId);
+        Photo photo = createPhoto(userId);
+        upploadImageToS3(file, photo.getMultimediaId());
+        photo.setMultimediaId(photo.getMultimediaId());
         photoRepository.save(photo);
-        return multimediaId;
+        return photo.getMultimediaId();
     }
     public String createPhotoResource(MultipartFile file, long userId, String multimediaId) {
-        Photo photo = photoRepository.findByUserId(userId)
-                .orElseGet(() -> createPhoto(userId));
+        Photo photo = createPhoto(userId, multimediaId);
         upploadImageToS3(file, multimediaId);
         photo.setMultimediaId(multimediaId);
         photoRepository.save(photo);
@@ -67,11 +60,21 @@ public class ImageService {
     }
 
     public Photo createPhoto(long userId){
+        String multimediaId = uniqueIDServiceClient.getUniqueImageId();
         return Photo.builder()
                 .userId(userId)
+                .multimediaId(multimediaId)
                 .localDateTime(LocalDateTime.now())
                 .build();
     }
+    public Photo createPhoto(long userId, String multimediaId){
+        return Photo.builder()
+                .userId(userId)
+                .multimediaId(multimediaId)
+                .localDateTime(LocalDateTime.now())
+                .build();
+    }
+
 
 
 }
